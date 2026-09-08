@@ -64,6 +64,17 @@ def map_url(place: dict) -> str:
     return "https://www.google.com/maps/search/?api=1&query=" + urllib.parse.quote_plus(q)
 
 
+def xhs_url(place: dict) -> str:
+    """Xiaohongshu search link for a venue, keyed on its search-friendly name."""
+    q = str(place.get("xhs_query", place.get("display_name", "")))
+    return "https://www.xiaohongshu.com/search_result?keyword=" + urllib.parse.quote_plus(q)
+
+
+def xhs_link(place: dict) -> str:
+    """The Xiaohongshu action button shared by all venue cards."""
+    return f'<a class="xhs-link" href="{e(xhs_url(place))}" target="_blank" rel="noreferrer">小红书 ↗</a>'
+
+
 def image_files(place: dict) -> list[str]:
     result = []
     for image in place.get("images", []):
@@ -311,7 +322,7 @@ def sight_card(place: dict) -> str:
         f'<span>{e(place.get("area", ""))}</span><div class="sight-title-row"><h3>{e(place["display_name"])}</h3>{rating_html}</div>'
         f'<b>{e(marker)}</b><div class="sight-facts"><span>建议停留 {e(place.get("duration_minutes"))} 分钟</span></div><p>{e(place.get("description", ""))}</p>'
         f'<p class="hours-line"><b>开放</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p>'
-        f'<a href="{e(map_url(place))}" target="_blank" rel="noreferrer">{map_label()} ↗</a><a href="{e(place.get("source_url"))}" target="_blank" rel="noreferrer">官网 ↗</a></div></article>'
+        f'<a href="{e(map_url(place))}" target="_blank" rel="noreferrer">{map_label()} ↗</a>{xhs_link(place)}<a href="{e(place.get("source_url"))}" target="_blank" rel="noreferrer">官网 ↗</a></div></article>'
     )
 
 
@@ -327,7 +338,7 @@ def shop_card(place: dict) -> str:
         f'<article class="shop-row" data-shopping-card data-place-id="{e(place["id"])}"><div class="shop-visual">{gallery(place, place.get("area", ""))}</div><div class="shop-copy">'
         f'<span>{e(place.get("area", ""))} · {e(place.get("category", ""))}</span><h3>{e(place["display_name"])}</h3><strong>{e(place.get("scheduled_label", place.get("route_fit", "备选 · 按区域顺路加入")))}</strong><p>{e(place.get("description", ""))}</p>'
         f'<p class="shop-brands"><b>值得逛 / 买</b>{e(place.get("brand_highlights", ""))}</p>'
-        f'<small>{e(place.get("buying_tip", ""))}</small><small>开放：{e(place.get("hours"))} · {e(place.get("closed_days"))}</small></div><div class="shop-actions"><a href="{e(map_url(place))}" target="_blank">地图 ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 ↗</a></div></article>'
+        f'<small>{e(place.get("buying_tip", ""))}</small><small>开放：{e(place.get("hours"))} · {e(place.get("closed_days"))}</small></div><div class="shop-actions"><a href="{e(map_url(place))}" target="_blank">地图 ↗</a>{xhs_link(place)}<a href="{e(place.get("source_url"))}" target="_blank">官网 ↗</a></div></article>'
     )
 
 
@@ -351,7 +362,7 @@ def experience_card(place: dict) -> str:
     return (
         f'<article class="movement-card has-visual" data-experience-card data-place-id="{e(place["id"])}"><div class="movement-visual">{gallery(place, place.get("area", ""))}</div><div class="movement-copy"><span>{e(place.get("area", ""))} · {e(place.get("category", ""))}</span>'
         f'<h3>{e(place["display_name"])}</h3><strong>{e(place.get("scheduled_label", place.get("distance_from_stay", "")))}</strong><p>{e(place.get("description", ""))}</p>{risk}'
-        f'<p class="hours-line"><b>开放</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p><div><a href="{e(map_url(place))}" target="_blank">{map_label()} ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 / 预约 ↗</a></div></div></article>'
+        f'<p class="hours-line"><b>开放</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p><div><a href="{e(map_url(place))}" target="_blank">{map_label()} ↗</a>{xhs_link(place)}<a href="{e(place.get("source_url"))}" target="_blank">官网 / 预约 ↗</a></div></div></article>'
     )
 
 
@@ -376,7 +387,7 @@ def restaurant_card(place: dict) -> str:
         f'<div class="restaurant-top"><h3><span>{e(place.get("local_name", place["display_name"]))}</span><small>{e(place.get("english_name", ""))}</small></h3>{rating_block}</div><p class="cuisine">{e(place.get("cuisine", ""))} · {e(place.get("area", ""))}</p>'
         f'<p>招牌：{e(place.get("signature_dishes", ""))}</p><p class="restaurant-day">{e(place.get("scheduled_label", place.get("route_fit", "备选 · 按区域顺路加入")))}</p>'
         f'<p class="restaurant-why"><b>为什么值得去</b>{e(place.get("description", ""))}</p><p class="hours-line"><b>营业</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p>'
-        f'<div class="restaurant-actions"><a class="map-link" href="{e(map_url(place))}" target="_blank">{map_label()} 导航 ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 / 来源 ↗</a></div>'
+        f'<div class="restaurant-actions"><a class="map-link" href="{e(map_url(place))}" target="_blank">{map_label()} 导航 ↗</a>{xhs_link(place)}<a href="{e(place.get("source_url"))}" target="_blank">官网 / 来源 ↗</a></div>'
         f'<div class="restaurant-foot"><strong>{e(place.get("price_per_person", ""))} / 人</strong><span>距离与开放时间以出发前复核为准</span></div></div></article>'
     )
 
