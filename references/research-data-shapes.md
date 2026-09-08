@@ -1,97 +1,232 @@
-# Research pack data shapes
+markdown
+# Research Data Shapes
 
-Use these minimal shapes when authoring research packs. Add researched fields required by the generated task, but do not change these container types.
+This document defines the exact data structures that the research phase must produce for each module. All research output must conform to these shapes before proceeding to the rendering phase.
 
-The machine-readable authority is `assets/research-pack-contract.json`. Generated research tasks, early pack validation, compilation and consistency auditing all read that file. The examples below are explanatory views of the same contract.
+---
 
-## Framing roots and itinerary periods
+## Global Context
 
-`destination`, `display_name`, `country` and required string `year` are four separate root fields. They are not nested inside a `destination` object. Dates and trip preferences live under `trip`:
+Every research session includes a global context object:
 
 ```json
 {
-  "destination": "Sample City",
-  "display_name": "示例城市",
-  "country": "Sample Country",
-  "year": "2026",
-  "trip": {"start_date": "2026-11-10", "end_date": "2026-11-14", "days": 5, "rhythm": "relaxed", "travelers": "2", "interests": [], "constraints": []}
+  "destination": "Chengdu",
+  "days": 4,
+  "travelers": 2,
+  "styles": ["culture", "food"],
+  "region": "domestic" | "international",
+  "preferences": "optional user notes"
 }
-```
+Region Determination
+region = "domestic": Destination is within mainland China.
 
-Every itinerary day has one `periods` object. Morning, afternoon and evening are children of that object, never three root fields:
+Maps: Baidu Maps
 
-```json
+Official Info: WeChat Official Accounts
+
+Restaurant Ratings: Dianping (大众点评)
+
+Photos: Baidu Maps POI or WeChat articles
+
+region = "international": Destination is outside mainland China.
+
+Maps: Google Maps
+
+Official Info: Official websites
+
+Restaurant Ratings: Google Maps ratings
+
+Photos: Official websites or Google Maps
+
+Module 1: Itinerary (行程)
+json
 {
-  "date": "2026-11-10",
-  "theme": "老城与河岸",
-  "summary": "上午进入老城，下午沿河步行，晚间在同区用餐。",
-  "periods": {
-    "morning": {"title": "老城", "description": "从中央市场步行到古城门。"},
-    "afternoon": {"title": "河岸", "description": "沿河参观寺院并预留咖啡休息。"},
-    "evening": {"title": "夜市", "description": "在河岸夜市用餐后返回住宿区。"}
+  "module": "itinerary",
+  "data": {
+    "overview": "string — brief summary of the trip",
+    "days": [
+      {
+        "day": 1,
+        "date": "optional date string",
+        "theme": "string — e.g., 'Historical Sites'",
+        "activities": [
+          {
+            "time": "09:00",
+            "activity": "string",
+            "location": "string",
+            "notes": "optional string"
+          }
+        ],
+        "meals": {
+          "breakfast": "string — recommendation or 'included'",
+          "lunch": "string — recommendation",
+          "dinner": "string — recommendation"
+        }
+      }
+    ],
+    "pace_notes": "string — e.g., 'Moderate pace with afternoon breaks'"
   }
 }
-```
-
-## Place references and groups
-
-Module groups never contain a bare string ID. Wrap every reference:
-
-```json
+Module 2: Attractions (景点)
+json
 {
-  "title": "温泉与入浴",
-  "subtitle": "日归泡汤",
-  "items": [{"place_id": "onsen-01"}, {"place_id": "onsen-02"}]
+  "module": "attractions",
+  "data": {
+    "must_see": [
+      {
+        "name": "string — attraction name",
+        "name_local": "string — local language name",
+        "description": "string — brief description",
+        "location": {
+          "address": "string",
+          "map_link": "string — Baidu Maps (domestic) or Google Maps (international) link",
+          "coordinates": "optional {lat, lng}"
+        },
+        "official_info": {
+          "type": "wechat" | "website",
+          "value": "string — WeChat Official Account name (domestic) or website URL (international)"
+        },
+        "opening_hours": "string",
+        "ticket_price": "string — e.g., '¥60' or 'Free'",
+        "best_time_to_visit": "string — e.g., 'Morning'",
+        "photo_url": "string — optional",
+        "photo_source": "string — e.g., 'Baidu Maps POI' or 'Official Website'"
+      }
+    ],
+    "hidden_gems": [
+      {
+        "name": "string",
+        "description": "string",
+        "location": { "address": "string", "map_link": "string" },
+        "why_visit": "string — why it's worth visiting"
+      }
+    ]
+  }
 }
-```
-
-The referenced place exists exactly once in a `places/*.json` array and owns its description, links, hours and images. Itinerary stops also use an object with `place_id`; they are not strings.
-
-## Pending and confirmed transport
-
-Unknown transport is:
-
-```json
-{"status": "pending", "legs": []}
-```
-
-Confirmed transport is `{"status":"confirmed","legs":[...]}`. Each leg is an object containing `direction`, `date`, `service_number`, `origin`, `destination`, `departure_time` and `arrival_time`; add terminals only when verified. Never mix pending placeholders with confirmed legs.
-
-## Pending and confirmed stays
-
-Unknown accommodation is represented by one status object and no property place:
-
-```json
-[{"status": "pending", "place_id": null, "check_in": null, "check_out": null, "notes": "住宿待确认"}]
-```
-
-A confirmed stay uses `status: "confirmed"`, a real hotel `place_id`, `check_in` and `check_out`. That hotel must exist once in the places pack and carry two verified image declarations. Do not create a hotel-area record for a pending stay.
-
-This public edition does not import a flight/hotel decision product. Put only user-supplied booked transport or stay facts directly into the framing pack. Never scrape or reconstruct another product's HTML; missing facts remain in the neutral pending state.
-
-## Daily shopping and photography guidance
-
-Every itinerary stop also supplies `practical_note` and `time_guard`. `practical_note` says what to do, what to notice and how to use the stop without generic filler. `time_guard` gives one useful decision boundary: latest sensible departure, maximum queue, a shortening rule or a transfer buffer. Write both while the route is authored; Trip Mode reuses them without another research or generation pass. Every scheduled place records verified `latitude` and `longitude` (or an equivalent `coordinates` pair) during the normal exact-place lookup so the offline hand-drawn route keeps correct relative geography. Never guess coordinates.
-
-Every itinerary day has `shopping_advice` (`title`, `description`, `url`, `link_label`) for Trip Mode only. An intentionally shopping-free day still supplies an honest route-specific reason and links back to the full shopping guide. Never render this block in the main itinerary and never retain legacy island copy for a city destination.
-
-Every day also has `photo_advice` with `title`, `lighting`, at least two non-empty `suitable_shots` entries, `portrait_tip`, and a compact `shooting_plan` of two or three `{time,title,note}` cards tied to scheduled places. These are protected authored fields: name scheduled places, lighting direction/time, subject/viewpoint/composition and a route-specific portrait or etiquette constraint. They must differ across days; do not seed them with reusable generic prose. The main itinerary renders the canonical two-column text card; Trip Mode reuses the same payload and keeps direct local sample upload. Optional `samples` may be injected only when every item is verified. If no verified local sample exists, omit `samples`; never render a broken placeholder. The generic bottom “小红书找人像样片” action is intentionally absent, while exact-place Xiaohongshu buttons on Trip Mode stop cards remain.
-
-## Restaurant names, dishes and ratings
-
-The food module uses `local_snacks` (exactly four authored food entries), `dedicated_trip` (six or more restaurant references) and `reliable_chains` (two to four exact restaurant-branch references). Do not emit `near_stay` or `delivery`. For trips of three or more days, at least three IDs from `dedicated_trip` also occur in itinerary stops; their times and branches must be compatible with the route. A chain fallback is locally characteristic and established across multiple branches, not merely a famous independent restaurant.
-
-`signature_dishes` is concise researched display copy naming two or more specific dishes, not a raw JSON array, generic phrase, or placeholder:
-
-```json
+Module 3: Shopping (购物)
+json
 {
-  "local_name": "店舗の現地語名",
-  "english_name": "Official English Name",
-  "signature_dishes": "dish one · dish two",
-  "ratings": [
-    {"platform": "Google", "status": "verified", "rating": 4.4, "review_count": 1280, "source_url": "https://…", "verified_at": "YYYY-MM-DD"}
+  "module": "shopping",
+  "data": {
+    "districts": [
+      {
+        "name": "string — shopping district name",
+        "location": { "address": "string", "map_link": "string" },
+        "vibe": "string — e.g., 'Luxury malls', 'Local markets'",
+        "best_for": ["string — e.g., 'Clothing', 'Souvenirs'"]
+      }
+    ],
+    "souvenirs": [
+      {
+        "item": "string — souvenir name",
+        "where_to_buy": "string",
+        "price_range": "string",
+        "cultural_note": "string — optional"
+      }
+    ]
+  }
+}
+Module 4: Experiences (体验)
+json
+{
+  "module": "experiences",
+  "data": {
+    "activities": [
+      {
+        "name": "string — experience name",
+        "type": "string — e.g., 'Cooking class', 'Tea ceremony', 'Workshop'",
+        "description": "string",
+        "location": { "address": "string", "map_link": "string" },
+        "duration": "string — e.g., '2 hours'",
+        "price": "string — e.g., '¥200/person'",
+        "booking_info": "string — how to book",
+        "why_unique": "string — what makes this special"
+      }
+    ]
+  }
+}
+Module 5: Dining (餐饮)
+IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine dining, cafes, bars, or chains.
+
+5a. Local Snacks / Street Food (当地小吃推荐)
+json
+{
+  "module": "dining",
+  "subsection": "local_snacks",
+  "data": [
+    {
+      "snack_name": "string — e.g., 'Mapo Tofu'",
+      "snack_name_local": "string — local language name",
+      "recommended_shop": "string — stall or shop name",
+      "location": {
+        "address": "string",
+        "map_link": "string — Baidu Maps (domestic) or Google Maps (international)",
+        "nearby_landmark": "string"
+      },
+      "price": "string — e.g., '¥15'",
+      "rating": {
+        "source": "dianping" | "google" | "none",
+        "score": "number — optional, e.g., 4.5",
+        "display": "string — e.g., '大众点评：4.5/5' or 'Google：4.6/5'"
+      },
+      "description": "string — what makes it special, how to eat it"
+    }
   ]
 }
-```
-
-`ratings` is optional and may be omitted or an empty array. At the start of place research, open one ordinary exact-place Google result as the run-level capability probe. If it opens, Google is available: look up every rating-bearing sight and restaurant and attempt to capture both score and review count. Full venue coverage is required when the channel is available. If one venue cannot open because of timeout, access or blocking failure, retry that same venue once with a shorter exact query or alternate canonical Google entry; after a second failure, continue to another real venue. Stop remaining rating work only after two different venues fail to open consecutively. Any opened venue resets the consecutive-failure count, and all ratings already found remain valid. A page that opens without a reliable score affects only that venue and is not an access failure. `review_count` is optional: show it when Google exposes it reliably, otherwise omit only the count and keep the verified score. A focused rating-repair pass may patch venues skipped by an earlier erroneous stop-loss, followed by recompile/render/dependent gates. Do not create an `unavailable` record merely to prove that a search failed. A verified record includes `rating`, its exact source URL and retrieval date. Never use zero as a substitute.
+5b. Signature Restaurants Worth a Detour (值得专程去)
+json
+{
+  "module": "dining",
+  "subsection": "worth_a_detour",
+  "data": [
+    {
+      "restaurant_name": "string",
+      "restaurant_name_local": "string — local language name",
+      "signature_dishes": ["string — e.g., 'Kung Pao Chicken'"],
+      "location": {
+        "address": "string",
+        "map_link": "string — Baidu Maps (domestic) or Google Maps (international)"
+      },
+      "price_range": "string — e.g., '¥80-150/person'",
+      "rating": {
+        "source": "dianping" | "google" | "none",
+        "score": "number — optional",
+        "display": "string — e.g., '大众点评：4.7/5'"
+      },
+      "why_worth_detour": "string — the story, reputation, or unique factor",
+      "reservation_needed": "boolean",
+      "reservation_info": "string — optional"
+    }
+  ]
+}
+Module 6: Local Tips (当地贴士)
+json
+{
+  "module": "local_tips",
+  "data": {
+    "transportation": {
+      "getting_around": "string — overview",
+      "tips": ["string — specific transport tips"]
+    },
+    "cultural_etiquette": {
+      "overview": "string",
+      "dos_and_donts": ["string — do's", "string — don'ts"]
+    },
+    "weather": {
+      "best_season": "string",
+      "current_season_notes": "string",
+      "what_to_wear": "string"
+    },
+    "money": {
+      "currency": "string",
+      "payment_methods": ["string — e.g., 'WeChat Pay', 'Credit Card'"],
+      "tipping_culture": "string"
+    },
+    "safety": {
+      "general_safety": "string",
+      "emergency_numbers": "string — e.g., '110 for police'"
+    },
+    "other": ["string — any additional practical advice"]
+  }
+}
