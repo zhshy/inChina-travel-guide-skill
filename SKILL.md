@@ -74,6 +74,21 @@ For every venue or recommendation you research, always check `region` first:
 4. **Generate HTML** with 6 modules using the output format template
 5. **Present to user** — deliver the final HTML guide
 
+### Region flows through to the rendered page
+
+`region` is not only a research hint. The render pipeline derives it from the profile
+(`country`, or the optional `region` field) and stamps it on the page body as
+`data-handbook-region="domestic" | "international"`. From there:
+
+- Every static venue card (stays / sights / shops / experiences / food) gets its
+  **location link** from `map_url()` in `build_render_bindings.py`, which returns a
+  **Baidu Maps** link for domestic and **Google Maps** for international (a place may
+  override with its own explicit non-foreign link).
+- Trip Mode (`trip-mode.js`) reads the same attribute to pick its default map provider:
+  domestic defaults to **百度地图** with **谷歌地图** as the alternate; international
+  defaults to **Google** with **Apple Maps** as the alternate. Users can still switch
+  within that pair and the choice is remembered per destination.
+
 ## Color Scheme
 
 The guide uses a **fixed default color scheme** (blue/teal theme). No user color selection is required.

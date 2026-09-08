@@ -28,6 +28,30 @@ LOCKED_FILES = {
     "theme-switcher.css", "theme-switcher.js", "gsap.min.js",
 }
 
+# Mainland administrative/city markers used to infer a "domestic" destination
+# from the profile's country / destination when no explicit region is stored.
+_CN_MARKERS = (
+    "中国", "中华人民共和国", "china", "cn", "mainland",
+    "北京", "上海", "广州", "深圳", "成都", "重庆", "杭州", "西安", "南京", "武汉",
+    "天津", "苏州", "郑州", "长沙", "沈阳", "青岛", "宁波", "厦门", "福州", "济南",
+    "合肥", "昆明", "大连", "哈尔滨", "长春", "石家庄", "太原", "南昌", "南宁",
+    "贵阳", "兰州", "乌鲁木齐", "呼和浩特", "银川", "西宁", "海口", "拉萨",
+    "香港", "澳门", "台湾", "taiwan", "hong kong", "macao", "macau",
+)
+
+
+def infer_region(country: str, destination: str = "") -> str:
+    """Return 'domestic' (mainland China, Baidu-driven) or 'international'.
+
+    Preference: an explicit region stored on the profile wins; otherwise the
+    country field decides; destination is only a fallback heuristic.
+    """
+    text = " ".join(str(x) for x in (country, destination) if x).lower().replace(" ", "")
+    for marker in _CN_MARKERS:
+        if marker.lower() in text:
+            return "domestic"
+    return "international"
+
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -151,11 +175,15 @@ def main() -> int:
     if not body_match:
         raise SystemExit("missing canonical body tag")
     body_tag = body_match.group(0)
+    region = str(data.get("region") or infer_region(data.get("country", ""), data.get("destination", ""))).lower()
+    if region not in ("domestic", "international"):
+        region = "international"
     metadata = {
         "data-handbook-destination": data.get("destination", ""),
         "data-handbook-destination-short": data.get("display_name", ""),
         "data-handbook-year": data.get("year", ""),
         "data-handbook-default-theme": data.get("default_theme", "rainforest"),
+        "data-handbook-region": region,
     }
     for attribute, value in metadata.items():
         escaped = str(value).replace("&", "&amp;").replace('"', "&quot;")

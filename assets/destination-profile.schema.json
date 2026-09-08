@@ -8,6 +8,7 @@
     "destination": {"type": "string", "minLength": 1},
     "display_name": {"type": "string", "minLength": 1},
     "country": {"type": "string", "minLength": 1},
+    "region": {"type": "string", "enum": ["domestic", "international"], "description": "Optional explicit region override. When omitted, the render pipeline infers it from 'country' (and 'destination'). domestic = mainland China (Baidu Maps); international = outside mainland (Google Maps)."},
     "year": {"type": "string", "minLength": 4},
     "render_bindings_file": {"type": "string", "minLength": 1},
     "trip": {

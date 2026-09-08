@@ -16,7 +16,7 @@ Preserve the responsive editorial layout and these user-facing capabilities:
 
 The public edition includes local reference-photo upload inside Trip Mode, with large previews, full-screen viewing and browser-local persistence. It does not include request-package downloads or a separate photo-planning editor.
 
-Trip Mode uses the same narrow phone-first interface on desktop and mobile. Each day contains one collapsed, offline hand-drawn route generated from verified coordinates; it does not download map tiles at runtime. Google and Apple are the only navigation choices, with Google as the first-use default. Stop cards retain exact-place Xiaohongshu actions, practical visit notes and explicit time/queue fallbacks. No legacy destination constants or parallel Trip Mode implementation may remain.
+Trip Mode uses the same narrow phone-first interface on desktop and mobile. Each day contains one collapsed, offline hand-drawn route generated from verified coordinates; it does not download map tiles at runtime. Map providers follow the destination region (read from the rendered `data-handbook-region` attribute): domestic builds default to Baidu Maps with Google as the alternate, international builds default to Google with Apple Maps as the alternate. Stop cards retain exact-place Xiaohongshu actions, practical visit notes and explicit time/queue fallbacks. No legacy destination constants or parallel Trip Mode implementation may remain.
 
 ## Adaptation rules
 

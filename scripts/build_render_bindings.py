@@ -14,8 +14,54 @@ def e(value) -> str:
     return html.escape(str(value if value is not None else ""), quote=True)
 
 
+# Region state drives which map provider every static venue card links to.
+# SKILL.md sets region from the research phase; domestic (mainland) uses Baidu,
+# international keeps Google. Cards built by this script honour the profile.
+_REGION = "international"
+_CN_MARKERS = (
+    "中国", "中华人民共和国", "china", "cn", "mainland",
+    "北京", "上海", "广州", "深圳", "成都", "重庆", "杭州", "西安", "南京", "武汉",
+    "天津", "苏州", "郑州", "长沙", "沈阳", "青岛", "宁波", "厦门", "福州", "济南",
+    "合肥", "昆明", "大连", "哈尔滨", "长春", "石家庄", "太原", "南昌", "南宁",
+    "贵阳", "兰州", "乌鲁木齐", "呼和浩特", "银川", "西宁", "海口", "拉萨",
+    "香港", "澳门", "台湾", "taiwan", "hong kong", "macao", "macau",
+)
+
+
+def infer_region(country: str, destination: str = "") -> str:
+    text = " ".join(str(x) for x in (country, destination) if x).lower().replace(" ", "")
+    for marker in _CN_MARKERS:
+        if marker.lower() in text:
+            return "domestic"
+    return "international"
+
+
+def set_region(profile: dict) -> str:
+    """Choose domestic (Baidu) or international (Google) for this build."""
+    global _REGION
+    explicit = str(profile.get("region") or "").lower()
+    _REGION = explicit if explicit in ("domestic", "international") else infer_region(
+        str(profile.get("country", "")), str(profile.get("destination", ""))
+    )
+    return _REGION
+
+
+def map_label() -> str:
+    return "百度地图" if _REGION == "domestic" else "Google Maps"
+
+
 def map_url(place: dict) -> str:
-    return str(place.get("map_url") or ("https://www.google.com/maps/search/?api=1&query=" + urllib.parse.quote_plus(str(place.get("map_query", place.get("display_name", ""))))))
+    explicit = place.get("map_url")
+    q = str(place.get("map_query", place.get("display_name", "")))
+    if _REGION == "domestic":
+        # Mainland guides default to Baidu; honour an explicit domestic link if
+        # the place already carries one that is not a foreign map provider.
+        if explicit and not re.search(r"google\.|maps\.apple|map\.baidu", str(explicit), re.I):
+            return str(explicit)
+        return "https://map.baidu.com/search/" + urllib.parse.quote_plus(q)
+    if explicit:
+        return str(explicit)
+    return "https://www.google.com/maps/search/?api=1&query=" + urllib.parse.quote_plus(q)
 
 
 def image_files(place: dict) -> list[str]:
@@ -195,7 +241,7 @@ def stays(profile: dict, places: dict[str, dict]) -> str:
             f'<p class="hotel-fullname">{e(place.get("english_name", ""))}</p><p>{e(place.get("area", ""))} · {e(place.get("description", stay.get("notes", "")))}</p>'
             f'<dl><div><dt>入住</dt><dd>{e(dates)}</dd></div><div><dt>地址</dt><dd>{e(place.get("address", ""))}</dd></div><div><dt>出行</dt><dd>{e(place.get("transport_note", ""))}</dd></div></dl>'
             + (f'<p class="hotel-selected-price"><b>已选价格</b> ¥{e(place["selection_price"].get("nightly_price_cny"))}/间夜 · 全程 ¥{e(place["selection_price"].get("total_price_cny"))}<small>{e(place["selection_price"].get("room"))} · 快照 {e(place["selection_price"].get("snapshot_at"))}</small></p>' if place.get("selection_price") else '')
-            + f'<div class="hotel-links"><a href="{e(map_url(place))}" target="_blank" rel="noreferrer">Google Maps ↗</a><a href="{e(place.get("source_url"))}" target="_blank" rel="noreferrer">住宿资料 ↗</a></div></div></article>'
+            + f'<div class="hotel-links"><a href="{e(map_url(place))}" target="_blank" rel="noreferrer">{map_label()} ↗</a><a href="{e(place.get("source_url"))}" target="_blank" rel="noreferrer">住宿资料 ↗</a></div></div></article>'
         )
     return '<div class="shell">' + heading('STAY', 'WHERE TO STAY', profile.get('stay_title', '住宿与旅行基地'), profile.get('stay_summary', '')) + ''.join(cards) + '<a class="back-to-contents" href="#contents">↑ 回到目录</a></div>'
 
@@ -265,7 +311,7 @@ def sight_card(place: dict) -> str:
         f'<span>{e(place.get("area", ""))}</span><div class="sight-title-row"><h3>{e(place["display_name"])}</h3>{rating_html}</div>'
         f'<b>{e(marker)}</b><div class="sight-facts"><span>建议停留 {e(place.get("duration_minutes"))} 分钟</span></div><p>{e(place.get("description", ""))}</p>'
         f'<p class="hours-line"><b>开放</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p>'
-        f'<a href="{e(map_url(place))}" target="_blank" rel="noreferrer">Google Maps ↗</a><a href="{e(place.get("source_url"))}" target="_blank" rel="noreferrer">官网 ↗</a></div></article>'
+        f'<a href="{e(map_url(place))}" target="_blank" rel="noreferrer">{map_label()} ↗</a><a href="{e(place.get("source_url"))}" target="_blank" rel="noreferrer">官网 ↗</a></div></article>'
     )
 
 
@@ -305,7 +351,7 @@ def experience_card(place: dict) -> str:
     return (
         f'<article class="movement-card has-visual" data-experience-card data-place-id="{e(place["id"])}"><div class="movement-visual">{gallery(place, place.get("area", ""))}</div><div class="movement-copy"><span>{e(place.get("area", ""))} · {e(place.get("category", ""))}</span>'
         f'<h3>{e(place["display_name"])}</h3><strong>{e(place.get("scheduled_label", place.get("distance_from_stay", "")))}</strong><p>{e(place.get("description", ""))}</p>{risk}'
-        f'<p class="hours-line"><b>开放</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p><div><a href="{e(map_url(place))}" target="_blank">Google Maps ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 / 预约 ↗</a></div></div></article>'
+        f'<p class="hours-line"><b>开放</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p><div><a href="{e(map_url(place))}" target="_blank">{map_label()} ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 / 预约 ↗</a></div></div></article>'
     )
 
 
@@ -330,7 +376,7 @@ def restaurant_card(place: dict) -> str:
         f'<div class="restaurant-top"><h3><span>{e(place.get("local_name", place["display_name"]))}</span><small>{e(place.get("english_name", ""))}</small></h3>{rating_block}</div><p class="cuisine">{e(place.get("cuisine", ""))} · {e(place.get("area", ""))}</p>'
         f'<p>招牌：{e(place.get("signature_dishes", ""))}</p><p class="restaurant-day">{e(place.get("scheduled_label", place.get("route_fit", "备选 · 按区域顺路加入")))}</p>'
         f'<p class="restaurant-why"><b>为什么值得去</b>{e(place.get("description", ""))}</p><p class="hours-line"><b>营业</b>{e(place.get("hours"))} · {e(place.get("closed_days"))}</p>'
-        f'<div class="restaurant-actions"><a class="map-link" href="{e(map_url(place))}" target="_blank">Google Maps 导航 ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 / 来源 ↗</a></div>'
+        f'<div class="restaurant-actions"><a class="map-link" href="{e(map_url(place))}" target="_blank">{map_label()} 导航 ↗</a><a href="{e(place.get("source_url"))}" target="_blank">官网 / 来源 ↗</a></div>'
         f'<div class="restaurant-foot"><strong>{e(place.get("price_per_person", ""))} / 人</strong><span>距离与开放时间以出发前复核为准</span></div></div></article>'
     )
 
@@ -487,6 +533,7 @@ def main() -> int:
     profile = json.loads(args.profile.read_text(encoding="utf-8"))
     places = place_index(profile)
     bind_schedule_labels(profile, places)
+    set_region(profile)
     canonical = Path(__file__).resolve().parent.parent / "assets" / "canonical" / "product"
     fragments = {
         ".hero": hero(profile), ".trip-pulse": trip_pulse(profile, places), "#contents": contents(profile), ".flight-band": transport(profile), "#stay": stays(profile, places),
