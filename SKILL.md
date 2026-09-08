@@ -1,3 +1,4 @@
+markdown
 ---
 name: personalized-travel-guide-skill
 description: |
