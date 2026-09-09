@@ -78,6 +78,10 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 - 当地小吃/街头小吃：每项解释是什么、口感、常见于何处、怎么点，给出价格与地标；可点名一家代表店。
 - 值得专程去：招牌菜、人均区间、营业时间、地图链接，并写明“值得专程去的理由”。
 - 明确不出现高端餐厅/咖啡/酒吧/连锁。每张餐厅卡标注评分来源（境内=大众点评、境外=Google）。
+- **门店时效弹性**：具体门店的排队/营业/口碑变化很快。能核实到可靠且具代表性的具名门店（如
+  老字号）就直接点名；否则可用“方向性推荐”——写清推荐哪种业态/口味、去哪片找、怎么判断好坏，并提示
+  “在地图/点评按‘离你最近的分店’选择、以到店为准”。这样做优于硬塞一个可能已过时的门店名。
+- **评分**：得分可省略（无评分的餐饮卡仍完整）；只给来源标签即可，切勿编造当前分值。
 
 ### 当地贴士 Local Tips
 - 分区/卡片式实用信息：交通、文化礼仪、天气与穿搭、支付、安全。用真实、决策导向的短句。
@@ -91,6 +95,8 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 - **No fabricated facts**: opening hours, prices, ratings and map coordinates must be from research.
   If unverifiable, omit or clearly mark as approximate — never invent.
 - No content copied from another destination; no placeholder venues; no filler like “注意安全/记得打卡”.
+- See **§8 Dynamic facts & honesty convention** for how to handle prices/hours/ratings that go stale
+  and when to signal “以官方实时公示为准”.
 
 ## 6. Accessibility & polish checklist (before delivery)
 
@@ -103,6 +109,23 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 
 ## 7. Definition of done
 
-Save as a `.html` file (filename should identify destination, e.g. `chengdu-guide.html`), open a
-quick mental pass over §6, then **present the file to the user for preview** with a one-line
-summary (destination, duration, the six modules delivered).
+Write the guide to its **own standalone file** (not inside the skill repo) — name it after the
+destination, e.g. `chengdu-guide.html`. Open a quick mental pass over §6, then **present the file
+to the user for preview** with a one-line summary (destination, duration, the six modules
+delivered).
+
+> Filename hint: `{destination-slug}-guide.html`, e.g. `chengdu-guide.html`, `tokyo-guide.html`.
+
+## 8. Dynamic facts & honesty convention
+
+Dates, prices, opening hours and platform ratings go stale fast. Do **not** treat a single look-up
+as permanent truth:
+
+- Where you state a hard fact (price / hours / score), prefer adding a light qualifier such as
+  “以官方/门店实时公示为准” near price-or-hours lines or in the footer.
+- If a venue's official booking flow exists (e.g. China: 官方微信实名预约 for 熊猫基地 / museums),
+  say so — it is high-value practical advice and usually more useful than a price.
+- If you cannot verify a venue's current score/rating at build time, **omit the number** (a guide
+  with zero ratings is complete) or keep only the source label; never invent a score.
+- If a fact cannot be verified but the item is still worth recommending, either omit it or mark it
+  clearly approximate — never fabricate.
