@@ -98,6 +98,30 @@ AI 将自动判断区域并启动研究流程。
 
 ---
 
+## 🧪 实战示例：发布攻略到独立域名
+
+本 Skill 的交付物是 **一个 HTML + 同级 `{城市}-guide_files/` 本地图片目录**。若想把某份生成好的攻略
+分享给他人，推荐给它配一个 **独立的 GitHub Pages 域名**，让攻略有专属的、可永久访问的链接。
+
+以「北京·国庆 3 日游」为例，完整流程如下：
+
+| 步骤 | 说明 |
+|------|------|
+| 1️⃣ 用本 Skill 生成攻略 | 产出目录 `beijing-nationalday-guide/`，内含 `beijing-nationalday-3days.html` + `beijing-nationalday-guide_files/`（8 张本地图，HTML 用相对路径引用） |
+| 2️⃣ 为攻略建独立仓库 | 新建 GitHub 仓库，命名与攻略同名，如 `zhshy/beijing-nationalday-guide`，获得独立 Pages 子路径 `/beijing-nationalday-guide/` |
+| 3️⃣ 放入并配置 Pages | `main` 分支直接放 HTML + 图目录 + `index.html`（跳转到攻略页）+ `.nojekyll`，仓库 Settings→Pages 开启，Source 选 `main` / root |
+| 4️⃣ 上线 | 得到专属链接 `https://zhshy.github.io/beijing-nationalday-guide/`（根入口）与 `.../beijing-nationalday-3days.html`（攻略本体） |
+
+> ✅ **要点**：攻略自身的 `beijing-nationalday-guide_files/` 图片用**相对路径**引用、与 HTML 一起分发，
+> 因此整套文件直接放进任何静态托管（GitHub Pages / Vercel / 网盘）都能正常显示、不裂图。
+>
+> ✅ **独立域名的意义**：不要把攻略塞进本 Skill 仓库的 `gh-pages` 分支——那会让链接长成
+> `…/inChina-travel-guide-skill/beijing-nationalday-3days.html`，且把生成物与 Skill 源码混在一起。
+> 新建同名独立仓库后，攻略拥有干净短链 `https://zhshy.github.io/beijing-nationalday-guide/`，
+> Skill 仓库也保持纯净（只含源码，无需 `gh-pages` 分支）。
+
+---
+
 ## 📁 项目结构
 
 ```
