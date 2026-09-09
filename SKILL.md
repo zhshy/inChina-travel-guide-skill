@@ -59,6 +59,7 @@ rather than guessing their rules):
 | `references/rendering-spec.md` | **before building the HTML** — the style/structure contract for the final page |
 | `references/image-and-source-policy.md` | sourcing images, ratings, and map links (region-aware) |
 | `references/itinerary-selection-logic.md` | choosing places / building daily itineraries from traveler interests |
+| `references/xhs-research.md` | **(optional)** harvesting traveler word-of-mouth from Xiaohongshu to enrich Dining research when the sandbox has browser/CDP tooling |
 | `references/first-use-intake.md` | handling intake (questionnaire vs. defaults) for a new request |
 
 > **Local images (must-do before writing cards)**: run the bundled Pexels fetcher
@@ -138,6 +139,13 @@ Research each module with accurate, current, verifiable data. Quality gates:
 Image/rating/map-source rules and exclusions: see `references/image-and-source-policy.md`.
 Do **not** invent opening hours, prices, ratings, or map links. When a fact can’t be verified,
 omit it or clearly mark it as approximate rather than fabricating.
+
+> **Optional Dining enrichment (小红书口碑)**: when a Dining venue (esp. `international` street food,
+> a niche 老字号, or a hidden-gem shop) has weak 大众点评 / Google coverage **and** the sandbox has a
+> working browser/CDP path, you may consult `references/xhs-research.md` to corroborate it from
+> traveler notes and tag the card `小红书口碑` (source `xhs`). This is an **optional enhancement,
+> never a gate** — if the tooling is unavailable, fall back to the normal sources above and do not
+> fabricate note data.
 
 ### 3.1 节假日与预订提醒（按 region 分支执行）
 

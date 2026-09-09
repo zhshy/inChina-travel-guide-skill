@@ -150,9 +150,9 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
       },
       "price": "string — e.g., '¥15'",
       "rating": {
-        "source": "dianping" | "google" | "none",
-        "score": "number — optional, e.g., 4.5",
-        "display": "string — e.g., '大众点评：4.5/5' or 'Google：4.6/5'"
+        "source": "dianping" | "google" | "xhs" | "none",
+        "score": "number — optional, e.g., 4.5 (omit when only a 'xhs' word-of-mouth tag exists)",
+        "display": "string — e.g., '大众点评：4.5/5' or 'Google：4.6/5'; for a xhs-sourced venue use '小红书口碑'"
       },
       "description": "string — what makes it special, how to eat it"
     }
@@ -177,9 +177,9 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
       },
       "price_range": "string — e.g., '¥80-150/person'",
       "rating": {
-        "source": "dianping" | "google" | "none",
+        "source": "dianping" | "google" | "xhs" | "none",
         "score": "number — optional",
-        "display": "string — e.g., '大众点评：4.7/5'"
+        "display": "string — e.g., '大众点评：4.7/5'; for a xhs-sourced venue use '小红书口碑'"
       },
       "why_worth_detour": "string — the story, reputation, or unique factor",
       "reservation_needed": "boolean",

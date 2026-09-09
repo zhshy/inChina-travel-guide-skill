@@ -92,8 +92,14 @@ All research must respect the `region` flag set at the start of the build.
 |--------|---------------|------------------|
 | Domestic | Dianping (大众点评) score | - |
 | International | Google Maps rating | TripAdvisor (if more relevant) |
+| Either (optional) | Xiaohongshu word-of-mouth (`xhs`) | — use only to corroborate a venue whose official/score coverage is weak, not as the primary rating |
 
 When displaying ratings, always label the source clearly (e.g., "大众点评：4.5/5" or "Google：4.6/5").
+A venue corroborated via Xiaohongshu notes shows the tag **"小红书口碑"** (`rating.source: "xhs"`) and
+normally carries **no numeric score** unless a specific, sourced one exists. The optional
+Xiaohongshu harvesting workflow is in `references/xhs-research.md`; it is an enhancement, never a
+gate — with no browser/CDP tooling, fall back to the primary/secondary sources above and do not
+invent note data.
 
 ---
 
