@@ -80,7 +80,8 @@ inChina-travel-guide-skill/
     ├── first-use-intake.md          # 问卷/默认输入引导
     ├── research-data-shapes.md      # 6 大模块字段结构（含区域分支）
     ├── image-and-source-policy.md   # 图片与来源策略（按区域区分）
-    └── itinerary-selection-logic.md # 行程与地点选择逻辑
+    ├── itinerary-selection-logic.md # 行程与地点选择逻辑
+    └── rendering-spec.md            # 单页 HTML 渲染规范（结构与视觉契约）
 ```
 
 ---
@@ -96,14 +97,19 @@ inChina-travel-guide-skill/
 | ✅ 餐饮缩减为 2 类 | 仅保留「当地小吃」和「值得专程去」 |
 | ✅ 删除配色选择 | 固定使用蓝/青绿主题 |
 | ✅ 问卷界面优化 | 新增区域确认下拉菜单 |
+| ✅ 清理原版渲染流水线 | 移除 34 个 Python 脚本 / agents 配置 / 冲突的 8 模块 references |
+| ✅ 新增渲染规范 | `references/rendering-spec.md` 固化单页 HTML 结构与视觉契约 |
+| ✅ canonical 定位为视觉参考 | 仅作观感参考，不驱动任何脚本，不复制其 Bali 内容与 8 章结构 |
 
 ---
 
 ## 🛠️ 技术依赖
 
-- 本 Skill 为 AI Agent 指令集，依赖支持 Skill 调用的 AI 平台（如 Claude、GPT 等）
-- 前端问卷为纯静态 HTML + CSS + JavaScript，无需服务端支持
-- 图片和评分数据由 AI 在运行期间通过搜索获取
+- 本 Skill 为 AI Agent 指令集，兼容任何支持 Skill/技能包调用的 AI 平台（如 WorkBuddy、Claude、GPT 等）。
+- 使用方式是让 AI 加载 `SKILL.md`，再按需读取 `references/` 下的规范；无需任何运行时、依赖或构建。
+- 前端问卷（`assets/intake-questionnaire/index.html`）为纯静态 HTML + CSS + JavaScript，可本地双击打开或部署到任意静态托管。
+- 图片、评分与地图链接由 AI 在生成期间通过联网搜索获取，并按境内/境外自动切换来源。
+- 产出为单一自包含 HTML 文件，可离线用浏览器打开。
 
 ---
 

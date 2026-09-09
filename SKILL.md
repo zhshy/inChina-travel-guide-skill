@@ -5,8 +5,10 @@ description: |
   It first detects whether the destination is inside mainland China (domestic) or abroad
   (international) and switches data sources accordingly: Baidu Maps + WeChat Official Accounts
   + Dianping for domestic, Google Maps + official websites + Google ratings for international.
-  The final deliverable is a self-contained, mobile-friendly HTML file with exactly six modules.
-  Best for "帮我做一份 X 的旅行攻略/手册" style requests.
+  The final deliverable is a self-contained, mobile-friendly HTML file with exactly six modules
+  (行程/景点/购物/体验/餐饮/当地贴士).
+  Trigger on: "帮我做一份 X 的旅行攻略/手册/指南", "X 玩 N 天怎么安排",
+  "X travel guide / itinerary", trip planning with destination + duration + traveler profile.
 ---
 
 # Personalized Travel Guide Skill
@@ -50,6 +52,7 @@ rather than guessing their rules):
 | File | Load when… |
 |------|-----------|
 | `references/research-data-shapes.md` | defining the fields to collect for each of the six modules |
+| `references/rendering-spec.md` | **before building the HTML** — the style/structure contract for the final page |
 | `references/image-and-source-policy.md` | sourcing images, ratings, and map links (region-aware) |
 | `references/itinerary-selection-logic.md` | choosing places / building daily itineraries from traveler interests |
 | `references/first-use-intake.md` | handling intake (questionnaire vs. defaults) for a new request |
@@ -117,7 +120,11 @@ omit it or clearly mark it as approximate rather than fabricating.
 
 ## 4. Build the HTML guide
 
-Assemble **one self-contained HTML file** that looks premium and works on phone + desktop:
+**Before writing any HTML, load `references/rendering-spec.md`** — it is the style/structure
+contract (file constraints, layout, six-section shape, per-card fields, accessibility, definition
+of done). Follow it so every guide looks premium and consistent.
+
+Assemble **one self-contained HTML file** that works on phone + desktop:
 
 - **6 sections only** (order: Itinerary, Attractions, Shopping, Experiences, Dining, Local Tips),
   each with a clear numbered section and anchor navigation at top.
