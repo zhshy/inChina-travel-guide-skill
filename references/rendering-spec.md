@@ -64,8 +64,9 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 ### 景点 Attractions
 - 必去 (must-see) + 小众 (hidden gems). Each card: 名称(+中文/当地名)、一句话为何值得去、地址、
   **精确地图链接**(境内=百度/境外=Google)、开放时间、票价(若有)、建议时长/最佳时段、来源或公众号/官网。
-- One evocative image per featured place when you can source an exact one; otherwise a styled
-  placeholder/icon is fine — never a wrong/stock photo pretending to be the place.
+- **每个“必去”景点卡必须配一张真实、内容正确的照片**（见下“Image rule”）——这是交付底线，
+  不要让一整屏景点都变成无图的文字卡。图片做不到真实/稳定时，才允许用有设计感的占位缩略图
+  顶位并标注，绝不张冠李戴。
 
 ### 购物 Shopping
 - 购物区/商圈卡片 + 特色伴手礼列表。伴手礼:是什么、去哪买、怎么挑、携带/托运注意。
@@ -87,6 +88,26 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 - 分区/卡片式实用信息：交通、文化礼仪、天气与穿搭、支付、安全。用真实、决策导向的短句。
 
 ## 5. Cross-cutting data rules
+
+### 5.1 Image rule（每个地点的配图）—— 交付底线
+- **“必去”景点卡必须有图**。体验/餐厅/购物等卡也尽量配图；实在做不到时保持整洁即可。
+- 图片来源梯队（从优到劣）：
+  1. 可靠、可署名、URL 稳定的开放图库（境内优先 Wikimedia Commons / 各城市官方旅游图库；
+     境外 Wikimedia Commons）。
+  2. 官方渠道图（官网/官方社媒/公众号文章图，若有直接稳定 URL）。
+  3. 兜底：能加载的占位/图标，或地图截图——但明确标注为示意，不用来冒充实拍。
+- **稳定性与可授权要求**：
+  - 只使用**长期稳定、支持外链、无 Referer 防盗链**的图 URL（如 `upload.wikimedia.org`）。
+  - 拒绝会裂图的图：需要登录态/签名/Referer 才能显示的图床（如部分国内图床、小红书图床）
+    一律不用——哪怕“现在能看”，放进要分发/长期保存的 HTML 后也会裂。
+  - 优先可自由使用/署名的图；不用有明显水印、Logo、需注明转售限制的图。
+- **图源不可得时的诚实处理**：
+  - 如果一个“必去”景点的图确实取不到稳定、正确的源，**不要随便塞一张**。
+  - 向用户说明“该图源在生成环境不可访问/无法验证”，并提供可选方案
+    （用户自己提供直链/图片、或提供图库 key、或接受占位）。
+  - 宁可用克制的抽象占位并坦白，也不要放一张内容错误或会裂的图。
+- 每张图建议给 `alt`（简短中文描述）。
+
 
 - **Every venue/location** carries a precise **map action** — a Baidu Maps (domestic) / Google
   Maps (international) link. Region is fixed per guide (see SKILL.md §1).
