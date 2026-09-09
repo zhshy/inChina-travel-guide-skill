@@ -23,12 +23,16 @@ Every research session starts from a global context object:
   - Maps: Baidu Maps
   - Official Info: WeChat Official Accounts
   - Restaurant Ratings: Dianping (大众点评)
-  - Photos: Baidu Maps POI or WeChat articles
+  - Photos: Pexels script (`scripts/fetch_pexels_image.py`) → local download
 - `region = "international"` — Destination is outside mainland China (Tokyo, Paris, New York, etc.).
   - Maps: Google Maps
   - Official Info: Official websites
   - Restaurant Ratings: Google Maps ratings
-  - Photos: Official websites or Google Maps
+  - Photos: Pexels script (`scripts/fetch_pexels_image.py`) → local download
+
+**港澳台**: 中国香港 / 中国澳门 / 中国台湾虽属中国领土，但涉及出入境证件与货币，
+一律按 `region = "international"` 处理（Google Maps + 官网 + Google 评分），
+并在当地贴士中提示港澳通行证 / 入台证等所需证件（以官方最新规定为准）。
 
 ## Module 1: Itinerary (行程)
 
@@ -47,7 +51,8 @@ Every research session starts from a global context object:
             "time": "09:00",
             "activity": "string",
             "location": "string",
-            "notes": "optional string"
+            "notes": "optional string",
+            "transfer_note": "optional string — 自驾时标注路程时间；若行程落在中国节假日窗口(元旦/过年/清明/端午/五一/中秋/十一/圣诞)，需在时间后括号标注×1.5倍拥堵预留，如 '车程约1.5小时（节假日建议按×1.5倍预留）'"
           }
         ],
         "meals": {
@@ -237,6 +242,24 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
     "safety": {
       "general_safety": "string",
       "emergency_numbers": "string — e.g., '110 for police'"
+    },
+    "visa": {
+      "required": "boolean — 境外才填：是否需要办理签证",
+      "visa_type": "string — 签证形式，如 免签 / 落地签 / 电子签e-Visa / 提前送签贴纸签 / 过境签",
+      "key_documents": ["string — 关键材料"],
+      "processing_time": "string — 办理时长",
+      "source": "string — 官方使领馆/移民部门来源",
+      "note": "string — 提示出行前再次核实最新政策"
+    },
+    "public_holidays": {
+      "country": "string — 目的地国家/地区",
+      "holidays": ["string — 该国公共假期名称与日期"],
+      "source": "string — 来源"
+    },
+    "holiday_booking_alert": {
+      "in_china_holiday_window": "boolean — 行程是否落在元旦/过年/清明/端午/五一/中秋/十一/圣诞窗口",
+      "overlaps_local_holiday": "boolean — 境外：是否同时与该国公共假期重叠",
+      "message": "string — 提醒提前预订机票/酒店/火车票"
     },
     "other": ["string — any additional practical advice"]
   }

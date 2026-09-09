@@ -18,6 +18,9 @@ Treat explicit subculture tags literally. `二次元、动漫与游戏文化` ma
 
 ## Default audience tendency
 
+**默认受众（未指定时按此假设）：中国年轻视觉型旅客** — 偏好出片、节奏偏满、愿意为特色体验与
+夜景/夜市投入时间；作息与结束时间按下方「Daily time budget」的默认档执行。
+
 When preferences are missing or delegated to the Agent, assume a visually discerning young adult traveler from China who values recognizable highlights plus contemporary city life. Favor a balanced mix of:
 
 - one or two genuinely iconic anchors rather than an exhaustive landmark checklist;
@@ -29,6 +32,25 @@ When preferences are missing or delegated to the Agent, assume a visually discer
 - one or two signature cultural experiences with clear local identity.
 
 Do not force nightlife, shopping, cafes or photography onto users who excluded them. Do not use “young” as permission for unsafe, exhausting, expensive or purely viral choices.
+
+## Daily time budget (default audience)
+
+Unless the traveler profile says otherwise, assume the **default audience above** and schedule each
+full day inside this envelope:
+
+| Slot | Default (young / no elderly or kids) | With elderly (老人) or children (小孩) |
+|------|--------------------------------------|----------------------------------------|
+| 出发 | **08:00** 出发 | **09:00 以后**出发（不早于 9 点） |
+| 午餐 | **13:00–14:30** 之间任取一个时间，时长 **1 小时** | 同左（13:00–14:30，1 小时） |
+| 晚餐 / 夜市 | 可安排夜市、夜游等夜间项目 | 可安排，但收尾更早（见下行） |
+| 一天结束 | 最晚可到 **22:00–24:00** | 最晚 **21:00–22:00** 结束当天行程 |
+
+Rules:
+- 这些是**默认时间盒**，不是硬性钟点——在盒内按景点开放时间、路程与预约时段排布即可。
+- 含老人或小孩时整体放缓：早上不早于 9 点出发、晚间 21:00–22:00 前收尾，
+  并在半天里留出更明确的休息/用餐缓冲，避免连续高强度步行。
+- 抵达日与返程日一律更轻，不适用最晚收尾时间（以航班/车次为准）。
+- 若用户明确给了时间偏好（如“每天睡到自然醒”），以用户为准，覆盖本默认。
 
 ## Candidate selection
 

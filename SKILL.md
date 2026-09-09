@@ -79,6 +79,14 @@ Before researching, decide `region`:
   or the country is explicitly "China".
 - **international (境外)**: everything else (Tokyo, Paris, New York, …).
 
+**港澳台（重要，勿遗漏）**：中国香港、中国澳门、中国台湾虽属中国领土，但旅行场景涉及
+出入境证件、货币与语言，其**数据一律按 `international`（境外）规则处理**——即 Google Maps
+地图、官方网站、Google 评分。判定时把它们显式归为境外，不要因"属于中国"就套用境内
+（百度地图/公众号/大众点评）那套。
+- 写法上统一称"中国香港 / 中国澳门 / 中国台湾"，与 Hong Kong China / Macao China / Taiwan China 同义。
+- 同时在地贴士中提示所需证件：港澳需**港澳通行证**（及相应签注）；中国台湾需**大陆居民往来台湾通行证
+  （入台证）**等，以官方最新规定为准。
+
 Use `region` to pick data sources everywhere:
 
 | Data | domestic (境内) | international (境外) |
@@ -123,6 +131,26 @@ Image/rating/map-source rules and exclusions: see `references/image-and-source-p
 Do **not** invent opening hours, prices, ratings, or map links. When a fact can’t be verified,
 omit it or clearly mark it as approximate rather than fabricating.
 
+### 3.1 节假日与预订提醒（按 region 分支执行）
+
+先确认行程日期是否落在下列**中国节假日窗口**内：
+**元旦、过年（春节）、清明、端午、五一、中秋、十一（国庆）、圣诞**。
+
+**境内行程（domestic）**
+- 若行程落在上述窗口内，**且该段行程为自驾**：行程里每个"路程所需时间"都要在后面用括号
+  标注一个提示——拥堵系数，例如：`车程约 1.5 小时（节假日拥堵，实际建议按 ×1.5 倍预留）`。
+- 同时在贴士/行程显著位置提醒：**提前预订机票、酒店、火车票**（节假日一票难求、房价上浮）。
+- 非自驾的境内节假日行程同样建议给出提前预订提醒（机票/酒店/火车），但不强求 ×1.5 标注。
+
+**境外行程（international，含港澳台）**
+- **签证**：检索该目的地国家/地区对中国护照是否**需要办理签证**，以及**签证形式**
+  （免签 / 落地签 / 电子签 e-Visa / 提前送签贴纸签 / 过境签等），并写明关键材料与办理时长；
+  以官方使领馆或官方移民部门最新公告为准，提示"出行前再次核实"。
+- **公共假期**：检索该国的**公共假期（public holidays）**日历。
+- 若行程日期既落在上述中国节假日窗口内、**又**与该国公共假期重叠，则提醒
+  **提前预订机票、酒店、火车**（当地假期会放大客流与涨价）。
+- 签证与公共假期结论写进「当地贴士」，签证这类硬信息务必给出来源。
+
 ---
 
 ## 4. Build the HTML guide
@@ -133,11 +161,12 @@ of done). Follow it so every guide looks premium and consistent.
 
 Assemble **one HTML file + its sibling local-image folder** that works on phone + desktop:
 
-- **Fetch venue photos first** so cards are never imageless: for each 必去 attraction (and, when
+- **Fetch venue photos** so cards aren't imageless: for each 必去 attraction (and, when
   fitting, each signature experience / worth-a-detour restaurant / representative souvenir) run
   `scripts/fetch_pexels_image.py "<地点名>" "<english keywords>" --out {dest}-guide_files
   --filename {slug}.jpg`. Read the returned `alt`, pick a topic-matching candidate, and keep the
   downloaded file path to reference in the card. See `rendering-spec.md §5.1`.
+  **配图不是硬性底线**：某地点取不到贴切图时可整洁无图，不要硬塞不相关的图。
 - **6 sections only** (order: Itinerary, Attractions, Shopping, Experiences, Dining, Local Tips),
   each with a clear numbered section and anchor navigation at top.
 - Fixed **blue/teal editorial theme** — do not ask the user to pick a color.

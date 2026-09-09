@@ -49,11 +49,14 @@ All research must respect the `region` flag set at the start of the build.
 
 ## Photo Requirements
 
-- Each place card MUST include a local photo downloaded via the §0 Pexels script (or, if that is
-  unavailable, a clearly-labeled styled placeholder).
+- Each place card SHOULD include a local photo downloaded via the §0 Pexels script when a
+  topic-matching one is available — images make the guide considerably more appealing.
+- **Not mandatory**: if no suitable, correctly-licensed photo can be found for a place, ship the
+  card **without an image** and keep it tidy. Do not pad with an unrelated photo and do not add a
+  fake placeholder block.
 - Photo should **match the venue's theme** — for a famous landmark prefer the actual landmark when
-  Pexels returns it; a generic unrelated photo is NOT acceptable. A close-but-not-the-exact-building
-  representative photo is acceptable if labeled “主题示意图” in the footer.
+  Pexels returns it; a generic unrelated photo is NOT acceptable (better to omit). A
+  close-but-not-exact representative photo is acceptable if labeled “主题示意图” in the footer.
 
 ### Photo Credit
 - In the page footer note the source once, e.g. “配图来源：Pexels（License 可商用，主题示意图）”.
@@ -103,4 +106,5 @@ When displaying ratings, always label the source clearly (e.g., "大众点评：
 - Do NOT use a Pexels/stock photo that clearly shows a *different* venue or wrong subject; the photo
   must at least match the venue's theme. Judge by the returned `alt`; retry with a better keyword if
   unsure. A photo that merely resembles the place should be labeled “主题示意图” in the footer.
-- Do NOT leave a must-see attraction card without any image.
+- A place card with no suitable photo is acceptable — omit the image rather than misrepresenting the
+  venue.
