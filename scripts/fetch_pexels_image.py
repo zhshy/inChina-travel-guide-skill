@@ -23,9 +23,13 @@ python fetch_pexels_image.py --batch plan.csv --out ../chengdu-guide_files
 python fetch_pexels_image.py "武侯祠" "chinese ancient temple" --preview-only
 
 Key 配置（三选一，优先级从高到低）
-  1. 环境变量 PEXELS_API_KEY
-  2. scripts/.pexels_key 文件（首行即 key，已 gitignore）
+  1. 环境变量 PEXELS_API_KEY（视为真 key，不剥尾）
+  2. scripts/.pexels_key 文件（已 gitignore；可存真 key，或存“真 key + 末尾'1'”作弱混淆，
+     本脚本读取时会自动剥掉末尾的 '1' 还原为真 key）
   3. 脚本内 DEFAULT_KEY（仅当愿意把 key 放进代码时）
+
+注意：末尾追加 '1' 仅是一种极弱的混淆（对公开仓库里的爬虫形同明文），并非加密。
+若 .pexels_key 需要入库/公开，请优先改用“使用者各自配置真 key”的方式，不要依赖此混淆。
 
 授权说明
 --------
@@ -57,6 +61,10 @@ def load_key():
         if os.path.exists(p):
             with open(p) as f:
                 key = f.read().strip()
+    # 弱混淆还原：从 .pexels_key 文件读到的 key 若以 '1' 结尾，剥掉还原为真 key。
+    # （环境变量按真 key 处理，不剥尾，避免误伤。）
+    if key and key.endswith("1") and not os.environ.get("PEXELS_API_KEY"):
+        key = key[:-1]
     return key or DEFAULT_KEY
 
 
