@@ -16,9 +16,10 @@ description: |
 ## What this skill does
 
 Produces a complete, nicely designed single-page HTML travel guide for a given destination,
-duration, and traveler profile. The HTML is the deliverable — deliver one self-contained `.html`
-file (inline styles + minimal inline JS), no build scripts, no server, no external framework
-dependency.
+duration, and traveler profile. The deliverable is **one `.html` file plus a same-level local image
+folder** (`{destination}-guide_files/`) containing downloaded venue photos, so every must-see card
+ships with a real image that always displays. Inline styles + minimal inline JS, no build scripts,
+no server, no external framework dependency.
 
 > 核心工作流：收集输入 → 判定区域 → 研究 → 生成 6 模块单页 HTML → 交付并预览。
 
@@ -57,6 +58,12 @@ rather than guessing their rules):
 | `references/itinerary-selection-logic.md` | choosing places / building daily itineraries from traveler interests |
 | `references/first-use-intake.md` | handling intake (questionnaire vs. defaults) for a new request |
 
+> **Local images (must-do before writing cards)**: run the bundled Pexels fetcher
+> `scripts/fetch_pexels_image.py` to download each venue photo into `{destination}-guide_files/`
+> (see `rendering-spec.md §5.1` and `image-and-source-policy.md §0` for the exact command and rules).
+> It reads a key from `scripts/.pexels_key` or env `PEXELS_API_KEY` (that file is gitignored; it is
+> set locally by the skill owner — see `scripts/fetch_pexels_image.py` header for how to configure).
+
 > `assets/canonical/product/index.html` is kept **only as a visual-style reference** (its editorial
 > look, card rhythm, typography). Open it in a browser if you need a sense of a premium handbook
 > aesthetic. **Never copy its Bali content, never reproduce its 8-chapter structure, and do not try
@@ -79,7 +86,7 @@ Use `region` to pick data sources everywhere:
 | Location map | Baidu Maps link | Google Maps link |
 | Official info | WeChat Official Account name | Official website URL |
 | Restaurant rating | Dianping (大众点评) score | Google Maps rating |
-| Photos | Official WeChat article / Baidu Maps POI | Official website / Google Maps |
+| Photos | **Pexels via `scripts/fetch_pexels_image.py`** (both regions) — see §4 / rendering-spec §5.1 | same |
 
 The questionnaire lets the user override the auto-detected region.
 
@@ -124,26 +131,33 @@ omit it or clearly mark it as approximate rather than fabricating.
 contract (file constraints, layout, six-section shape, per-card fields, accessibility, definition
 of done). Follow it so every guide looks premium and consistent.
 
-Assemble **one self-contained HTML file** that works on phone + desktop:
+Assemble **one HTML file + its sibling local-image folder** that works on phone + desktop:
 
+- **Fetch venue photos first** so cards are never imageless: for each 必去 attraction (and, when
+  fitting, each signature experience / worth-a-detour restaurant / representative souvenir) run
+  `scripts/fetch_pexels_image.py "<地点名>" "<english keywords>" --out {dest}-guide_files
+  --filename {slug}.jpg`. Read the returned `alt`, pick a topic-matching candidate, and keep the
+  downloaded file path to reference in the card. See `rendering-spec.md §5.1`.
 - **6 sections only** (order: Itinerary, Attractions, Shopping, Experiences, Dining, Local Tips),
   each with a clear numbered section and anchor navigation at top.
 - Fixed **blue/teal editorial theme** — do not ask the user to pick a color.
-- Every place/venue card includes: name, description, and a **precise location link** (Baidu Maps
-  domestic / Google Maps international). Restaurant cards must label the **rating source**
+- Every place/venue card includes: name, description, a **precise location link** (Baidu Maps
+  domestic / Google Maps international), and a **local image** (`<img class="card-img" ...>` with
+  `src="{dest}-guide_files/{file}"`). Restaurant cards must label the **rating source**
   (大众点评 / Google).
-- Inline the CSS (and only the JS truly needed); keep the file portable so it can be opened from
-  disk or served statically.
+- Inline the CSS (and only the JS truly needed); keep the HTML portable so it can be opened from
+  disk or served statically **together with its `_files/` image folder**.
 - Responsive: readable and non-overflowing at ~390 px and ~1440 px widths.
 - Content is for the **target destination only** — no reference-destination copy, no placeholder
   venues, no translated filler.
 
-After generating, save it as a `.html` file and **present/preview it to the user** so they can
-view the result.
+After generating, save it as `{dest}-guide.html` alongside `{dest}-guide_files/` and **present the
+HTML to the user** so they can view the result.
 
 ---
 
 ## 5. Delivery
 
-Deliver the single HTML file with a one-line summary (destination, days, what the 6 modules cover).
+Deliver the `.html` **together with its `{destination}-guide_files/` image folder** (keep them side
+by side, or zip the pair), with a one-line summary (destination, days, what the 6 modules cover).
 The HTML file is the finished product; present it directly for preview.

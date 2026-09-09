@@ -14,11 +14,17 @@ its Bali content.
 
 ## 1. File-level constraints
 
-- **One self-contained `.html`** file: all CSS inline in a single `<style>`, only the JS that is
-  genuinely needed (e.g. the top-nav scroll/active state) inline in a single `<script>` at the end
-  of `<body>`.
-- No external CSS/JS/font/asset files, no CDN, no framework. Must open from disk via `file://`
-  and be servable as a static file.
+- **Deliverable is one HTML file + a sibling local-image folder.** The `.html` holds all CSS
+  inline in a single `<style>` and only the JS genuinely needed (e.g. top-nav active state) inline
+  in a single `<script>` at the end of `<body>`.
+- **Local images, not remote hotlinks.** Every venue photo is downloaded to a same-level folder
+  named `{destination-slug}-guide_files/` (e.g. `chengdu-guide_files/`, `tokyo-guide_files/`) and
+  referenced by a **relative path** like `chengdu-guide_files/panda-base.jpg`. This makes every
+  image 100% local and never breaks offline or from disk — deliver the HTML *together with* its
+  folder (zip them or keep them side by side). **Do not** rely on remote image URLs that need the
+  user's browser to reach the internet.
+- No external CSS/JS/font files, no CDN, no framework for layout. The page must still open via
+  `file://` and be servable statically, **provided the sibling `_files/` folder is present**.
 - Document language: use the traveler's UI language (default 简体中文) as the primary UI language,
   with native/local names shown alongside venue names.
 - `<html lang>` and `<title>` (e.g. `成都 4 天 3 晚 · 旅行手册`) set correctly.
@@ -33,6 +39,12 @@ its Bali content.
   whitespace, hairline rules (`rgba(...)~8–12%` borders) instead of heavy boxes.
 - Two clearly separated surfaces: **cover/hero** (destination title, date/duration, travel style
   chips, one evocative image or a clean gradient) and the **body** (cream/paper panels).
+- **Card images** (reuse this pattern for every venue card): make the card `overflow:hidden`, put a
+  top image that bleeds to the card edges, e.g.
+  `.card{...;padding:16px 16px 14px;overflow:hidden}` +
+  `.card .card-img-wrap{margin:-16px -16px 14px}` +
+  `.card-img{width:100%;height:168px;object-fit:cover;display:block}`.
+  This keeps the visual premium and the photos consistent across cards.
 - Readable body copy; a **serif for headings + system sans for body**, or all-system sans with
   clear hierarchy — pick one system font stack (e.g. `PingFang SC, "Microsoft YaHei", system-ui`),
   do not rely on a web font.
@@ -89,24 +101,39 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 
 ## 5. Cross-cutting data rules
 
-### 5.1 Image rule（每个地点的配图）—— 交付底线
-- **“必去”景点卡必须有图**。体验/餐厅/购物等卡也尽量配图；实在做不到时保持整洁即可。
-- 图片来源梯队（从优到劣）：
-  1. 可靠、可署名、URL 稳定的开放图库（境内优先 Wikimedia Commons / 各城市官方旅游图库；
-     境外 Wikimedia Commons）。
-  2. 官方渠道图（官网/官方社媒/公众号文章图，若有直接稳定 URL）。
-  3. 兜底：能加载的占位/图标，或地图截图——但明确标注为示意，不用来冒充实拍。
-- **稳定性与可授权要求**：
-  - 只使用**长期稳定、支持外链、无 Referer 防盗链**的图 URL（如 `upload.wikimedia.org`）。
-  - 拒绝会裂图的图：需要登录态/签名/Referer 才能显示的图床（如部分国内图床、小红书图床）
-    一律不用——哪怕“现在能看”，放进要分发/长期保存的 HTML 后也会裂。
-  - 优先可自由使用/署名的图；不用有明显水印、Logo、需注明转售限制的图。
-- **图源不可得时的诚实处理**：
-  - 如果一个“必去”景点的图确实取不到稳定、正确的源，**不要随便塞一张**。
-  - 向用户说明“该图源在生成环境不可访问/无法验证”，并提供可选方案
-    （用户自己提供直链/图片、或提供图库 key、或接受占位）。
-  - 宁可用克制的抽象占位并坦白，也不要放一张内容错误或会裂的图。
-- 每张图建议给 `alt`（简短中文描述）。
+### 5.1 Image rule（每个地点配本地图）—— 交付底线
+
+**目标：每一版手册都要带真实配图，不再出现整屏无图的文字卡。** 图一律下载到本地、以相对路径引用
+（见 §1），保证 100% 显示、不裂图。
+
+**默认取图路径（先执行这个）：用本 skill 自带的 Pexels 脚本**
+1. 在生成 HTML 前，为每个需配图的地点调一次 `scripts/fetch_pexels_image.py`：
+   - 它读取本地配置的 Pexels key（`scripts/.pexels_key` 或环境变量 `PEXELS_API_KEY`），
+     按英文关键词在 Pexels 搜索 → 打印候选（id + alt 描述）→ 下载到
+     `{city}-guide_files/`，并给出可写进卡片的 `src` 相对路径。
+   - 例：`python scripts/fetch_pexels_image.py "成都大熊猫繁育研究基地" "giant panda bamboo china" --out chengdu-guide_files --filename panda-base.jpg`
+   - 批量：建一份 `plan.csv`（`地点,英文关键词,文件名` 每行一个），
+     `python scripts/fetch_pexels_image.py --batch plan.csv --out chengdu-guide_files`
+   - 想对比多张再挑：加 `--preview-only` 只看候选，满意后再用 `--pick N` 下载第 N 张。
+2. 依据脚本返回的 **alt 描述 + 你的常识**判断是否贴切；不贴切就换更准的关键词重试
+   （宁可多试一次，也不要放一张内容不符的图）。
+3. 每张下载到本地的图写进对应卡片：`<img class="card-img" src="{city}-guide_files/{fname}" alt="简短中文描述" loading="lazy">`。
+
+**图片归属范围（交付底线）**
+- **“必去”景点卡必须有图**——不允许某个必去景点整卡无图。
+- 体验 / 值得专程去的餐厅 / 代表性购物伴手礼卡也尽量配图；做到就加分，实在不贴切可留整洁无图。
+- 若 Pexels 对某一地点实在搜不到贴切图（非常小众的地点），给该卡用一个有设计感的**纯 CSS 渐变占位缩略图**
+  顶位，并在页面 footer 或该卡注明“此图为主题示意图”，绝不张冠李戴、绝不放会裂的远程热链。
+
+**稳定性与可授权要求**
+- 只使用**长期稳定、可商用、无 Referer 防盗链**的图。Pexels License ≈ CC0：可商用、可修改、无需署名。
+- 拒绝会裂图的图源：需要登录态/签名/Referer 的图床（如部分国内图床、小红书图床）一律不用。
+- 每张本地图在 footer 注明“配图来源：Pexels（License 可商用）”。
+
+**图源/网络不可得时的诚实处理**
+- 若运行环境的 Pexels API 或图片 CDN 不可达、或找不到 key：**不要随便塞一张或硬放会裂的远程图**。
+- 向用户说明“取图通道在此环境不可用”，并提供可选方案（提供图库 key、或由用户本地给图/直链、或接受占位顶位）。
+- 兜底永远是：干净整洁 + 诚实说明，而不是一张内容错误或会裂的图。
 
 
 - **Every venue/location** carries a precise **map action** — a Baidu Maps (domestic) / Google
@@ -131,11 +158,15 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 ## 7. Definition of done
 
 Write the guide to its **own standalone file** (not inside the skill repo) — name it after the
-destination, e.g. `chengdu-guide.html`. Open a quick mental pass over §6, then **present the file
-to the user for preview** with a one-line summary (destination, duration, the six modules
-delivered).
+destination, e.g. `chengdu-guide.html`, and keep its images in the sibling
+`chengdu-guide_files/` folder. Do a mental pass over §6, confirm every must-see card has a local
+image that exists on disk, then **present the `.html` to the user for preview** with a one-line
+summary (destination, duration, the six modules delivered) and note that it ships together with
+its image folder.
 
-> Filename hint: `{destination-slug}-guide.html`, e.g. `chengdu-guide.html`, `tokyo-guide.html`.
+> Filename hint: `{destination-slug}-guide.html` + `{destination-slug}-guide_files/`,
+> e.g. `chengdu-guide.html` + `chengdu-guide_files/`, `tokyo-guide.html` + `tokyo-guide_files/`.
+> Deliver the pair together (same folder); do not send the HTML without its images.
 
 ## 8. Dynamic facts & honesty convention
 
