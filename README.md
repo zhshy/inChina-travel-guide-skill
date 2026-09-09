@@ -14,8 +14,8 @@
 - **境外**：使用 Google Maps、官方网站、Google 评分
 - 用户也可在问卷中手动修正区域判断
 
-### 📦 精简的 6 大模块
-相比原版的 8 大模块，移除了冗余内容，聚焦核心旅行信息：
+### 📦 精简的 7 大模块
+相比原版的 8 大模块，移除了冗余内容，聚焦核心旅行信息，并新增「未安排的景点清单」：
 
 | # | 模块 | 说明 |
 |---|------|------|
@@ -25,6 +25,7 @@
 | 4 | 体验 (Experiences) | 文化体验 / 特色活动 |
 | 5 | 餐饮 (Dining) | **仅两类**：当地小吃 + 值得专程去的餐厅 |
 | 6 | 当地贴士 (Local Tips) | 交通、文化、安全等实用信息 |
+| 7 | 未安排的景点清单 (Unscheduled) | 每天行程 30 km 内未排入的景点，勾选后生成可复制的 AI 编辑行程文字 |
 
 **已移除模块**：~~语言锦囊~~ · ~~出发前准备~~
 
@@ -101,7 +102,7 @@ AI 将自动判断区域并启动研究流程。
 
 ```
 inChina-travel-guide-skill/
-├── SKILL.md                 # Agent 核心规则（入口，含区域判断与 6 模块定义）
+├── SKILL.md                 # Agent 核心规则（入口，含区域判断与 7 模块定义）
 ├── README.md                # 本文件
 ├── assets/
 │   ├── intake-questionnaire/
@@ -112,7 +113,7 @@ inChina-travel-guide-skill/
 │   └── .pexels_key          # 本地私密 key（gitignore，不入库）
 └── references/
     ├── first-use-intake.md          # 问卷/默认输入引导
-    ├── research-data-shapes.md      # 6 大模块字段结构（含区域分支）
+    ├── research-data-shapes.md      # 7 大模块字段结构（含区域分支）
     ├── image-and-source-policy.md   # 图片与来源策略（Pexels 为主 + 事实核验来源）
     ├── itinerary-selection-logic.md # 行程与地点选择逻辑
     └── rendering-spec.md            # 单页 HTML 渲染规范（HTML + 本地图目录交付）
@@ -137,6 +138,8 @@ inChina-travel-guide-skill/
 | ✅ **新增 Pexels 本地配图通道** | `scripts/fetch_pexels_image.py` 下载景点图到本地 `_guide_files/`，保证每次生成都带图 |
 | ✅ **交付改为 HTML + 本地图目录** | 放宽“单文件”约束，配图 100% 本地可显示、不裂图 |
 | ✅ **Image rule 可执行化** | rendering-spec §5.1 从“要求有图”升级为“先跑取图脚本→下载→本地引用→兜底”的完整流程 |
+| ✅ **新增第 7 模块（未安排的景点清单）** | 每天行程 30 km 内未排入的景点，附图；勾选后生成可复制、AI 可识别的“编辑行程”文字 |
+| ✅ **配图降级** | “必须配图”→尽量配图，取不到可整洁无图（见“注意事项”） |
 
 ---
 
@@ -161,6 +164,8 @@ inChina-travel-guide-skill/
 - 境内景点优先搜索**微信公众号**作为官方信息来源
 - 境外景点优先搜索**官方网站**作为官方信息来源
 - 餐饮模块**严格限制**为两类，不得生成其他餐饮推荐
+- 第 7 模块（未安排的景点清单）：仅收录每天行程 30 km 内的未排入景点；勾选后生成的文字须
+  自包含、可直接粘回任意 AI 重新生成
 
 ---
 

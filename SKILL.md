@@ -5,8 +5,8 @@ description: |
   It first detects whether the destination is inside mainland China (domestic) or abroad
   (international) and switches data sources accordingly: Baidu Maps + WeChat Official Accounts
   + Dianping for domestic, Google Maps + official websites + Google ratings for international.
-  The final deliverable is a self-contained, mobile-friendly HTML file with exactly six modules
-  (行程/景点/购物/体验/餐饮/当地贴士).
+  The final deliverable is a self-contained, mobile-friendly HTML file with exactly seven modules
+  (行程/景点/购物/体验/餐饮/当地贴士/未安排的景点清单).
   Trigger on: "帮我做一份 X 的旅行攻略/手册/指南", "X 玩 N 天怎么安排",
   "X travel guide / itinerary", trip planning with destination + duration + traveler profile.
 ---
@@ -21,11 +21,11 @@ folder** (`{destination}-guide_files/`) containing downloaded venue photos, so e
 ships with a real image that always displays. Inline styles + minimal inline JS, no build scripts,
 no server, no external framework dependency.
 
-> 核心工作流：收集输入 → 判定区域 → 研究 → 生成 6 模块单页 HTML → 交付并预览。
+> 核心工作流：收集输入 → 判定区域 → 研究 → 生成 7 模块单页 HTML → 交付并预览。
 
-## Core Modules (final output — exactly 6)
+## Core Modules (final output — exactly 7)
 
-The final HTML guide contains **these six sections, and nothing else**:
+The final HTML guide contains **these seven sections, and nothing else**:
 
 1. **行程 Itinerary** — day-by-day plan with time slots and activities
 2. **景点 Attractions** — must-see landmarks and hidden gems
@@ -35,6 +35,9 @@ The final HTML guide contains **these six sections, and nothing else**:
    - Local Snacks / Street Food (当地小吃推荐)
    - Signature Restaurants Worth a Detour (值得专程去)
 6. **当地贴士 Local Tips** — practical local advice (transport, culture, weather, payment, safety)
+7. **未安排的景点清单 Unscheduled** — worthwhile places that were **not** fitted into the daily
+   plan but lie within **30 km of a day's route**; each card can be ticked and turned into a
+   copy-paste AI prompt that regenerates the itinerary with those places added.
 
 ### Removed modules (do NOT include)
 - ❌ Language Tips / 语言锦囊 — removed
@@ -126,6 +129,11 @@ Research each module with accurate, current, verifiable data. Quality gates:
 - **Experiences**: cultural activities, classes, workshops, performances, seasonal or local events
   with real local identity.
 - **Local Tips**: transport, cultural etiquette, weather/what-to-wear, payment, safety.
+- **Unscheduled (未安排的景点清单)**: while building the itinerary, keep a shortlist of worthwhile
+  places that did **not** make the daily plan but sit within **30 km of a day's route**. For each,
+  record: why it was dropped, distance to that day's anchor, suggested duration, address + map
+  link, and a photo when available. These become module 7, not filler — see
+  `itinerary-selection-logic.md` for the filtering rules.
 
 Image/rating/map-source rules and exclusions: see `references/image-and-source-policy.md`.
 Do **not** invent opening hours, prices, ratings, or map links. When a fact can’t be verified,
@@ -156,7 +164,7 @@ omit it or clearly mark it as approximate rather than fabricating.
 ## 4. Build the HTML guide
 
 **Before writing any HTML, load `references/rendering-spec.md`** — it is the style/structure
-contract (file constraints, layout, six-section shape, per-card fields, accessibility, definition
+contract (file constraints, layout, seven-section shape, per-card fields, accessibility, definition
 of done). Follow it so every guide looks premium and consistent.
 
 Assemble **one HTML file + its sibling local-image folder** that works on phone + desktop:
@@ -167,8 +175,8 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   --filename {slug}.jpg`. Read the returned `alt`, pick a topic-matching candidate, and keep the
   downloaded file path to reference in the card. See `rendering-spec.md §5.1`.
   **配图不是硬性底线**：某地点取不到贴切图时可整洁无图，不要硬塞不相关的图。
-- **6 sections only** (order: Itinerary, Attractions, Shopping, Experiences, Dining, Local Tips),
-  each with a clear numbered section and anchor navigation at top.
+- **7 sections only** (order: Itinerary, Attractions, Shopping, Experiences, Dining, Local Tips,
+  Unscheduled), each with a clear numbered section and anchor navigation at top.
 - Fixed **blue/teal editorial theme** — do not ask the user to pick a color.
 - Every place/venue card includes: name, description, a **precise location link** (Baidu Maps
   domestic / Google Maps international), and a **local image** (`<img class="card-img" ...>` with
@@ -176,6 +184,10 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   (大众点评 / Google).
 - Inline the CSS (and only the JS truly needed); keep the HTML portable so it can be opened from
   disk or served statically **together with its `_files/` image folder**.
+- **第 7 模块「未安排的景点清单」**：列出每天行程 **30 km 半径内**、有真实价值但未被排入的景点。
+  每张卡带 checkbox 与「编辑行程」按钮：勾选若干景点并点击后，页面生成一段**结构化、AI 可识别的
+  调整请求文字**（含原行程概要、每日主题、勾选景点及距离/建议时长、明确指令），用户一键复制后
+  粘贴回任意 AI 即可重新生成含这些景点的 HTML。详见 `rendering-spec.md §4.7 / §9`。
 - Responsive: readable and non-overflowing at ~390 px and ~1440 px widths.
 - Content is for the **target destination only** — no reference-destination copy, no placeholder
   venues, no translated filler.

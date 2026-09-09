@@ -265,3 +265,49 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
   }
 }
 ```
+
+## Module 7: Unscheduled (未安排的景点清单)
+
+The reservoir of worthwhile places that did NOT make the daily plan but sit within 30 km of a day's
+anchor. Filtering rules: see `itinerary-selection-logic.md` → "Unscheduled candidates". Build it
+during itinerary assembly (track near-miss candidates), not as a separate research sweep.
+
+```json
+{
+  "module": "unscheduled",
+  "data": [
+    {
+      "name": "string — 景点名称",
+      "name_local": "string — 当地/中文名",
+      "why_matters": "string — 一句话为何值得去",
+      "nearest_day": 2,
+      "distance_from_anchor_km": "string — 距当天锚点约 x km",
+      "suggested_duration": "string — e.g., '约2小时'",
+      "location": {
+        "address": "string",
+        "map_link": "string — Baidu (domestic) / Google (international)"
+      },
+      "reason_not_scheduled": "string — 为何未排入，如 'Day2已满' / '对Day3不顺路'",
+      "photo": "string — optional，本地图相对路径 {city}-guide_files/xxx.jpg",
+      "photo_alt": "string — optional 中文描述"
+    }
+  ]
+}
+```
+
+### 复制提示词数据（供 JS 生成"编辑行程"文字）
+
+为让第 7 模块的「生成编辑行程文字」按钮能拼出 AI 可识别的请求，页面需内联携带最小上下文
+（无需单独文件）：
+
+```json
+{
+  "trip": { "destination": "string", "days": 4,
+            "audience": "中国年轻视觉型旅客 | 含老人/小孩",
+            "time_box": "默认档或老人小孩档（见 itinerary-selection-logic）" },
+  "day_themes": [ { "day": 1, "theme": "抵达·老城烟火" } ],
+  "selected_candidates": [ { "name": "string", "distance_km": "string",
+                             "duration": "string", "map_link": "string",
+                             "reason": "string" } ]
+}
+```

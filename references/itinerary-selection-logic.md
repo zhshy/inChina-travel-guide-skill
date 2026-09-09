@@ -77,3 +77,29 @@ Across the trip:
 ## Final coherence check
 
 Before writing prose, review the ordered stops once: preference coverage, repeated attraction types, geographic backtracking, opening-hours conflicts, meal/rest gaps and overly late-to-early transitions. Fix those six issues from existing candidates. Do not launch a fresh broad search unless a required day has no viable anchor.
+
+## Unscheduled candidates for Module 7 (未安排的景点清单)
+
+After a day plan is fixed, produce a short **unscheduled** list — genuine places worth visiting that
+did **not** make the daily plan but are within **30 km of that day's anchor / route**. These are the
+"you could still add these" reservoir shown in the 7th module.
+
+Include only if all hold:
+- **Distance**: straight-ish travel from that day's main area ≤ ~30 km (if the whole destination is
+  compact, "within 30 km" is satisfied by almost everything — then tighten to "clearly reachable in
+  a short detour / same metro line" so the list stays useful and non-trivial).
+- **Real value, not filler**: it has a concrete "why it matters" and isn't a mere category-padding
+  repeat of an already-planned stop (skip a second similar temple/museum when one is already in).
+- **Not already on the day plan** (obviously) and not redundant with an identical planned stop.
+- **Not out of character** for the traveler: skip it if it contradicts an explicit exclusion or
+  interest profile, or is unsafe/exhausting for elderly/kids companions.
+
+For every kept candidate record: name (+local name), one-line why-it-matters, distance to the
+nearest day anchor, suggested duration, address + map link (Baidu/Google per region), why it was
+left out (e.g. "Day 2 already full", "not on route for Day 3"), and a photo when one is available.
+
+If a day has no such worthwhile unscheduled candidate within 30 km, don't invent one — that day
+simply contributes nothing to Module 7.
+
+The Module-7 reservoir is built **during** itinerary assembly (track near-miss candidates), not as a
+fresh research sweep afterwards — see `research-data-shapes.md` Module 7.

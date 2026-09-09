@@ -1,4 +1,4 @@
-# HTML Rendering Spec (6-module single-page guide)
+# HTML Rendering Spec (7-module single-page guide)
 
 This is the **style-and-structure contract for the final `.html` deliverable**. Follow it every
 time you build a guide so the output stays premium and consistent. It is a set of writing/rendering
@@ -53,8 +53,8 @@ its Bali content.
 
 ## 3. Navigation & page order
 
-Exactly six numbered sections, always in this order, with a **sticky top nav / in-page TOC** of the
-six Chinese titles at the very top:
+Exactly seven numbered sections, always in this order, with a **sticky top nav / in-page TOC** of the
+seven Chinese titles at the very top:
 
 1. 行程 Itinerary
 2. 景点 Attractions
@@ -62,8 +62,9 @@ six Chinese titles at the very top:
 4. 体验 Experiences
 5. 餐饮 Dining (two subgroups only)
 6. 当地贴士 Local Tips
+7. 未安排的景点清单 Unscheduled
 
-Each section gets `<section id="itinerary|attractions|shopping|experiences|dining|tips">` so the
+Each section gets `<section id="itinerary|attractions|shopping|experiences|dining|tips|unscheduled">` so the
 nav anchors work. Keep section titles short and consistent between the nav and the section heading.
 
 ## 4. Per-section content shape
@@ -111,6 +112,30 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 - **境内**：若行程落在上述中国节假日窗口，提醒提前预订机票/酒店/火车；自驾段另按 §3.1 标注
   路程 ×1.5 倍拥堵预留（写在行程卡片里）。
 - **中国港澳台**：提示所需证件（港澳通行证及签注 / 入台证等），以官方最新规定为准。
+
+### 未安排的景点清单 Unscheduled（第 7 模块）
+- 用途：把"很好、但没能排进每天行程"的景点整理出来，给用户留一个"还能去哪 / 我漏了什么"的
+  收口视图。**来源限定在每天行程锚点 30 km 半径内**——超出太远、或与既定景点重复的内容不收录。
+- 每张卡至少包含：名称(+当地名)、一句话为何值得去、**距它最近那天的锚点约 xx km**、
+  建议时长、地址 + 精确地图链接（境内=百度/境外=Google）、未排入的原因（一句话，如"Day2 已满 /
+  顺路度不高 / 与已选重复"）；**若取到内容贴切的图则附图**（无图可整洁不放，遵守 §5.1）。
+- 若某一天 30 km 内确实没有值得补充的未收录景点，该天可不出卡，不硬凑。
+- 详见 `itinerary-selection-logic.md` 的候选筛选规则与 `research-data-shapes.md` Module 7 结构。
+
+### 交互契约（编辑行程 → 复制 AI 提示词）
+第 7 模块是**静态 HTML + 少量内联 JS**，不接后端。每张未安排景点卡有一个 **checkbox**；模块底部
+有一个 **「生成编辑行程文字」按钮**（或每卡旁的「编辑行程」入口）。逻辑如下：
+
+1. 勾选若干张卡（可跨天，勾选时卡片高亮）。
+2. 点击按钮后，页面用内联 JS **生成一段结构化、纯文本、AI 可识别的"行程调整请求"**，放进一个
+   只读 `<textarea>`（并自动 focus/全选，方便复制），旁边提供「复制」按钮。
+3. 这段文字**必须自包含**，能让一个全新 AI 会话据此重新生成一份含这些景点的行程 HTML，至少包含：
+   - 目的地、天数、默认受众/时间盒（见 §4 行程的默认档）与是否含老人小孩；
+   - 当前每日主题与各天大致时间轴摘要；
+   - 用户在 7 模块里勾选的全部景点清单，每个带：名称、距当日锚点距离、建议时长、地址/地图链接；
+   - 明确指令：「把以上景点合理安排进某一天。若原行程时间不够，请提示『可在第 X 天增加一日安排』，
+     或建议压缩/调整其他某天的哪些景点，再重新生成完整的 7 模块 HTML。」
+4. 复制提示词写明是从哪份手册来的、作者可把结果粘回 AI 再生成。
 
 ## 5. Cross-cutting data rules
 
@@ -173,10 +198,9 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 
 Write the guide to its **own standalone file** (not inside the skill repo) — name it after the
 destination, e.g. `chengdu-guide.html`, and keep its images in the sibling
-`chengdu-guide_files/` folder. Do a mental pass over §6, confirm every must-see card has a local
-image that exists on disk, then **present the `.html` to the user for preview** with a one-line
-summary (destination, duration, the six modules delivered) and note that it ships together with
-its image folder.
+`chengdu-guide_files/` folder. Do a mental pass over §6, then **present the `.html` to the user for
+preview** with a one-line summary (destination, duration, the seven modules delivered) and note
+that it ships together with its image folder.
 
 > Filename hint: `{destination-slug}-guide.html` + `{destination-slug}-guide_files/`,
 > e.g. `chengdu-guide.html` + `chengdu-guide_files/`, `tokyo-guide.html` + `tokyo-guide_files/`.
