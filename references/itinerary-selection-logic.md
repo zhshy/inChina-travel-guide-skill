@@ -36,7 +36,7 @@ Shortlist before deep research. For every candidate, judge only five reusable di
 
 Avoid low-interest filler: generic workshops available in any city, repetitive museums/temples, remote photo spots with little else nearby, commercial “traditional experiences” with weak local identity, and activities selected only to fill a category. A featured experience must answer both “why here?” and “why for this traveler?” in one concrete sentence.
 
-In Standard mode, at least four of the six experience choices should directly match the traveler's selected interests. With no selected interests, use three varied categories drawn from the destination's strongest contemporary, food/design, evening, wellness or signature-culture scenes; do not default to craft classes or formal cultural activities merely because they are easy to source. If the bounded evidence ladder forces constrained mode, all four retained choices should match the selected interests or the destination's strongest mainstream-young-adult scenes.
+The researched experiences in the Experience module should directly match the traveler's selected interests where possible. With no selected interests, draw them from the destination's strongest contemporary, food/design, evening, wellness or signature-culture scenes; do not default to craft classes or formal cultural activities merely because they are easy to source. If an experience cannot be verified truthfully, replace it rather than shipping a filler card.
 
 ## Day construction
 
@@ -50,7 +50,7 @@ Across the trip:
 - avoid cross-city backtracking for a single weak candidate;
 - alternate dense and lighter periods, and preserve at least one realistic rest/meal buffer per half day;
 - place shopping, cafes, nightlife and optional experiences where they are already on the route;
-- keep unselected niche experiences in Chapter 04 choices rather than forcing them into the daily itinerary.
+- keep unselected niche experiences in the Experience module rather than forcing them into the daily itinerary.
 
 ## Final coherence check
 

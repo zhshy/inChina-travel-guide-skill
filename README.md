@@ -1,4 +1,3 @@
-markdown
 # 🧳 China Travel Guide Skill
 
 一个基于 AI 的智能旅行手册生成器，专为**中国境内旅行**深度优化，同时完美支持境外目的地。
@@ -68,19 +67,21 @@ AI 将自动判断区域并启动研究流程。
 ---
 
 ## 📁 项目结构
-inChina-travel-guide-skill/
-├── SKILL.md # Agent 核心规则（含区域判断）
-├── README.md # 本文件
-├── assets/
-│ └── intake-questionnaire/
-│ └── index.html # 用户问卷（含区域确认，无配色选择）
-├── references/
-│ ├── research-data-shapes.md # 数据结构定义（含区域分支）
-│ ├── image-and-source-policy.md # 图片与来源策略（按区域区分）
-│ └── ... # 其他参考文档
-└── scripts/ # 构建脚本
 
-text
+```
+inChina-travel-guide-skill/
+├── SKILL.md                 # Agent 核心规则（入口，含区域判断与 6 模块定义）
+├── README.md                # 本文件
+├── assets/
+│   ├── intake-questionnaire/
+│   │   └── index.html       # 用户问卷（含区域确认，无配色选择）
+│   └── canonical/product/   # 视觉风格参考（仅供参考，不作渲染驱动）
+└── references/
+    ├── first-use-intake.md          # 问卷/默认输入引导
+    ├── research-data-shapes.md      # 6 大模块字段结构（含区域分支）
+    ├── image-and-source-policy.md   # 图片与来源策略（按区域区分）
+    └── itinerary-selection-logic.md # 行程与地点选择逻辑
+```
 
 ---
 

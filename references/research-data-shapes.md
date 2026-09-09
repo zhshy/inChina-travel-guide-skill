@@ -1,13 +1,10 @@
-markdown
 # Research Data Shapes
 
-This document defines the exact data structures that the research phase must produce for each module. All research output must conform to these shapes before proceeding to the rendering phase.
-
----
+This document defines the data structures that the research phase should produce for each of the six core modules. These shapes are guidance for collecting destination records; they are not a mandate to emit intermediate JSON files or run any script. Gather the fields listed below and render them directly into the final single-page HTML guide.
 
 ## Global Context
 
-Every research session includes a global context object:
+Every research session starts from a global context object:
 
 ```json
 {
@@ -18,29 +15,24 @@ Every research session includes a global context object:
   "region": "domestic" | "international",
   "preferences": "optional user notes"
 }
-Region Determination
-region = "domestic": Destination is within mainland China.
+```
 
-Maps: Baidu Maps
+### Region Determination
 
-Official Info: WeChat Official Accounts
+- `region = "domestic"` — Destination is within mainland China (Beijing, Shanghai, Chengdu, Xi'an, etc.).
+  - Maps: Baidu Maps
+  - Official Info: WeChat Official Accounts
+  - Restaurant Ratings: Dianping (大众点评)
+  - Photos: Baidu Maps POI or WeChat articles
+- `region = "international"` — Destination is outside mainland China (Tokyo, Paris, New York, etc.).
+  - Maps: Google Maps
+  - Official Info: Official websites
+  - Restaurant Ratings: Google Maps ratings
+  - Photos: Official websites or Google Maps
 
-Restaurant Ratings: Dianping (大众点评)
+## Module 1: Itinerary (行程)
 
-Photos: Baidu Maps POI or WeChat articles
-
-region = "international": Destination is outside mainland China.
-
-Maps: Google Maps
-
-Official Info: Official websites
-
-Restaurant Ratings: Google Maps ratings
-
-Photos: Official websites or Google Maps
-
-Module 1: Itinerary (行程)
-json
+```json
 {
   "module": "itinerary",
   "data": {
@@ -68,8 +60,11 @@ json
     "pace_notes": "string — e.g., 'Moderate pace with afternoon breaks'"
   }
 }
-Module 2: Attractions (景点)
-json
+```
+
+## Module 2: Attractions (景点)
+
+```json
 {
   "module": "attractions",
   "data": {
@@ -104,8 +99,11 @@ json
     ]
   }
 }
-Module 3: Shopping (购物)
-json
+```
+
+## Module 3: Shopping (购物)
+
+```json
 {
   "module": "shopping",
   "data": {
@@ -127,8 +125,11 @@ json
     ]
   }
 }
-Module 4: Experiences (体验)
-json
+```
+
+## Module 4: Experiences (体验)
+
+```json
 {
   "module": "experiences",
   "data": {
@@ -146,11 +147,15 @@ json
     ]
   }
 }
-Module 5: Dining (餐饮)
+```
+
+## Module 5: Dining (餐饮)
+
 IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine dining, cafes, bars, or chains.
 
-5a. Local Snacks / Street Food (当地小吃推荐)
-json
+### 5a. Local Snacks / Street Food (当地小吃推荐)
+
+```json
 {
   "module": "dining",
   "subsection": "local_snacks",
@@ -174,8 +179,11 @@ json
     }
   ]
 }
-5b. Signature Restaurants Worth a Detour (值得专程去)
-json
+```
+
+### 5b. Signature Restaurants Worth a Detour (值得专程去)
+
+```json
 {
   "module": "dining",
   "subsection": "worth_a_detour",
@@ -200,8 +208,11 @@ json
     }
   ]
 }
-Module 6: Local Tips (当地贴士)
-json
+```
+
+## Module 6: Local Tips (当地贴士)
+
+```json
 {
   "module": "local_tips",
   "data": {
@@ -230,3 +241,4 @@ json
     "other": ["string — any additional practical advice"]
   }
 }
+```
