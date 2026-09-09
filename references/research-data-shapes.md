@@ -106,33 +106,7 @@ Every research session starts from a global context object:
 }
 ```
 
-## Module 3: Shopping (购物)
-
-```json
-{
-  "module": "shopping",
-  "data": {
-    "districts": [
-      {
-        "name": "string — shopping district name",
-        "location": { "address": "string", "map_link": "string" },
-        "vibe": "string — e.g., 'Luxury malls', 'Local markets'",
-        "best_for": ["string — e.g., 'Clothing', 'Souvenirs'"]
-      }
-    ],
-    "souvenirs": [
-      {
-        "item": "string — souvenir name",
-        "where_to_buy": "string",
-        "price_range": "string",
-        "cultural_note": "string — optional"
-      }
-    ]
-  }
-}
-```
-
-## Module 4: Experiences (体验)
+## Module 3: Experiences (体验)
 
 ```json
 {
@@ -154,7 +128,7 @@ Every research session starts from a global context object:
 }
 ```
 
-## Module 5: Dining (餐饮)
+## Module 4: Dining (餐饮)
 
 IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine dining, cafes, bars, or chains.
 
@@ -212,6 +186,32 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
       "reservation_info": "string — optional"
     }
   ]
+}
+```
+
+## Module 5: Shopping (购物)
+
+```json
+{
+  "module": "shopping",
+  "data": {
+    "districts": [
+      {
+        "name": "string — shopping district name",
+        "location": { "address": "string", "map_link": "string" },
+        "vibe": "string — e.g., 'Luxury malls', 'Local markets'",
+        "best_for": ["string — e.g., 'Clothing', 'Souvenirs'"]
+      }
+    ],
+    "souvenirs": [
+      {
+        "item": "string — souvenir name",
+        "where_to_buy": "string",
+        "price_range": "string",
+        "cultural_note": "string — optional"
+      }
+    ]
+  }
 }
 ```
 

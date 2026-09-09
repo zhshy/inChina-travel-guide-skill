@@ -58,9 +58,9 @@ seven Chinese titles at the very top:
 
 1. 行程 Itinerary
 2. 景点 Attractions
-3. 购物 Shopping
-4. 体验 Experiences
-5. 餐饮 Dining (two subgroups only)
+3. 体验 Experiences
+4. 餐饮 Dining (two subgroups only)
+5. 购物 Shopping
 6. 当地贴士 Local Tips
 7. 未安排的景点清单 Unscheduled
 
@@ -86,9 +86,6 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 - **每个景点尽量配一张真实、内容正确的照片**（见下“Image rule”）。取得到就放、让页面更有吸引力；
   取不到贴切图时**可以不放**，保持卡片整洁即可——绝不张冠李戴，也不要放会裂的远程图。
 
-### 购物 Shopping
-- 购物区/商圈卡片 + 特色伴手礼列表。伴手礼:是什么、去哪买、怎么挑、携带/托运注意。
-
 ### 体验 Experiences
 - 有真实本地身份的文化活动/工坊/演出/季节活动。卡片含名称、时长、价格、地点+地图链接、如何预约、
   “为什么在这里做、适合谁”。
@@ -101,6 +98,9 @@ nav anchors work. Keep section titles short and consistent between the nav and t
   老字号）就直接点名；否则可用“方向性推荐”——写清推荐哪种业态/口味、去哪片找、怎么判断好坏，并提示
   “在地图/点评按‘离你最近的分店’选择、以到店为准”。这样做优于硬塞一个可能已过时的门店名。
 - **评分**：得分可省略（无评分的餐饮卡仍完整）；只给来源标签即可，切勿编造当前分值。
+
+### 购物 Shopping
+- 购物区/商圈卡片 + 特色伴手礼列表。伴手礼:是什么、去哪买、怎么挑、携带/托运注意。
 
 ### 当地贴士 Local Tips
 - 分区/卡片式实用信息：交通、文化礼仪、天气与穿搭、支付、安全。用真实、决策导向的短句。

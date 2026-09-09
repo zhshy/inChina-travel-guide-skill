@@ -29,11 +29,11 @@ The final HTML guide contains **these seven sections, and nothing else**:
 
 1. **行程 Itinerary** — day-by-day plan with time slots and activities
 2. **景点 Attractions** — must-see landmarks and hidden gems
-3. **购物 Shopping** — best shopping areas and souvenirs
-4. **体验 Experiences** — cultural and unique local experiences
-5. **餐饮 Dining** — strictly limited to two sub-categories:
+3. **体验 Experiences** — cultural and unique local experiences
+4. **餐饮 Dining** — strictly limited to two sub-categories:
    - Local Snacks / Street Food (当地小吃推荐)
    - Signature Restaurants Worth a Detour (值得专程去)
+5. **购物 Shopping** — best shopping areas and souvenirs
 6. **当地贴士 Local Tips** — practical local advice (transport, culture, weather, payment, safety)
 7. **未安排的景点清单 Unscheduled** — worthwhile places that were **not** fitted into the daily
    plan but lie within **30 km of a day's route**; each card can be ticked and turned into a
@@ -122,12 +122,12 @@ Research each module with accurate, current, verifiable data. Quality gates:
 - **Attractions**: name (+ native name), address + precise map link (Baidu/Google per region),
   opening hours, ticket price when any, best time, brief description. WeChat Official Account
   (domestic) / official website (international) preferred as the official source.
+- **Experiences**: cultural activities, classes, workshops, performances, seasonal or local events
+  with real local identity.
 - **Dining**: ONLY local snacks / street food AND restaurants worth a detour. Skip fine dining,
   cafes, bars, and chains.
 - **Shopping**: distinctive local products + best shopping districts; explain what/where/how to
   choose + packing or customs caveats.
-- **Experiences**: cultural activities, classes, workshops, performances, seasonal or local events
-  with real local identity.
 - **Local Tips**: transport, cultural etiquette, weather/what-to-wear, payment, safety.
 - **Unscheduled (未安排的景点清单)**: while building the itinerary, keep a shortlist of worthwhile
   places that did **not** make the daily plan but sit within **30 km of a day's route**. For each,
@@ -175,7 +175,7 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   --filename {slug}.jpg`. Read the returned `alt`, pick a topic-matching candidate, and keep the
   downloaded file path to reference in the card. See `rendering-spec.md §5.1`.
   **配图不是硬性底线**：某地点取不到贴切图时可整洁无图，不要硬塞不相关的图。
-- **7 sections only** (order: Itinerary, Attractions, Shopping, Experiences, Dining, Local Tips,
+- **7 sections only** (order: Itinerary, Attractions, Experiences, Dining, Shopping, Local Tips,
   Unscheduled), each with a clear numbered section and anchor navigation at top.
 - Fixed **blue/teal editorial theme** — do not ask the user to pick a color.
 - Every place/venue card includes: name, description, a **precise location link** (Baidu Maps
