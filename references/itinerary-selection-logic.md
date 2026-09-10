@@ -60,6 +60,26 @@ Avoid low-interest filler: generic workshops available in any city, repetitive m
 
 The researched experiences in the Experience module should directly match the traveler's selected interests where possible. With no selected interests, draw them from the destination's strongest contemporary, food/design, evening, wellness or signature-culture scenes; do not default to craft classes or formal cultural activities merely because they are easy to source. If an experience cannot be verified truthfully, replace it rather than shipping a filler card.
 
+## Proactive cuts (主动删减)
+
+Not everything the user listed fits, and the user's wishlist is a wish, not a contract. **Delete
+for them, and say what was cut and why.** Cuts the user can see are fine; silent cuts are not.
+
+Cut early and explicitly when a candidate:
+
+- does not fit the day count (e.g. a half-day remote suburb inside a tight city trip);
+- explodes on the travel dates (holiday-crowded anchors in the core holiday window);
+- is weather-dependent with no indoor fallback nearby (mark such kept spots as weather-sensitive);
+- contradicts an explicit exclusion, or is unsafe/exhausting for the companions;
+- is a weak near-duplicate of an already-planned stop.
+
+During assembly, record every cut with a one-line reason — these reasons feed Module 7's
+"why it was left out" field and the delivery-time 删减说明 (cut list + reasons, stated in one
+short block). The guiding principle: **行程不是越满越好，是越顺越好** — a guide that runs
+smoothly beats a checklist that exhausts. Restaurants and cafes are supply points on the day's
+route, never anchors that bend the route — only user-named or reservation-required venues may
+shape a day around them.
+
 ## Day construction
 
 Build each full day around one geographic area and one primary anchor. Add one or two compatible secondary places, a meal/rest window and at most one optional evening extension. Arrival and departure days remain lighter.

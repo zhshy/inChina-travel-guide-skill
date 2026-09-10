@@ -14,6 +14,12 @@
 - **境外**：使用 Google Maps、官方网站、Google 评分
 - 用户也可在问卷中手动修正区域判断
 
+### 🧠 跨行程记忆
+- 首次生成后，把长期有效的旅行偏好（节奏、饮食忌口、预算习惯、支付/导航偏好、常同行人）沉淀到
+  `~/.inchina-travel-guide/MEMORY.md`（见 `references/trip-memory.md`）
+- 再次使用时自动预填偏好并告知用户，免去重复问卷
+- 严格不存敏感信息：截图、证件号、订单号、完整聊天记录一律不入库
+
 ### 📦 精简的 7 大模块
 相比原版的 8 大模块，移除了冗余内容，聚焦核心旅行信息，并新增「未安排的景点清单」：
 
@@ -136,10 +142,12 @@ inChina-travel-guide-skill/
 │   └── fetch_pexels_image.py # 取本地配图的 Pexels 脚本（读取 .pexels_key）
 │   └── .pexels_key          # 本地私密 key（gitignore，不入库）
 └── references/
-    ├── first-use-intake.md          # 问卷/默认输入引导
+    ├── first-use-intake.md          # 问卷/默认输入引导 + 四拍交互格式（Re-ground→Simplify→Recommend→Options）
+    ├── trip-memory.md               # 跨行程记忆协议（预填规则、可存/禁存清单、更新规则）
     ├── research-data-shapes.md      # 7 大模块字段结构（含区域分支）
     ├── image-and-source-policy.md   # 图片与来源策略（Pexels 为主 + 事实核验来源）
-    ├── itinerary-selection-logic.md # 行程与地点选择逻辑
+    ├── itinerary-selection-logic.md # 行程与地点选择逻辑 + 主动删减原则
+    ├── xhs-research.md              # 小红书口碑调研（可选增强，沙盒有 CDP 时启用）
     └── rendering-spec.md            # 单页 HTML 渲染规范（HTML + 本地图目录交付）
 ```
 
@@ -165,6 +173,9 @@ inChina-travel-guide-skill/
 | ✅ **新增第 7 模块（未安排的景点清单）** | 每天行程 30 km 内未排入的景点，附图；勾选后生成可复制、AI 可识别的“编辑行程”文字 |
 | ✅ **配图降级** | “必须配图”→尽量配图，取不到可整洁无图（见“注意事项”） |
 | ✅ **7 模块重排** | 顺序改为 行程→景点→体验→餐饮→购物→当地贴士→未安排清单（Shopping 与 Experiences/Dining 换位） |
+| ✅ **新增跨行程记忆** | `references/trip-memory.md` + `~/.inchina-travel-guide/MEMORY.md`：生成后沉淀长期偏好，复用自动预填，敏感信息禁存 |
+| ✅ **四拍交互格式** | 所有追问统一 Re-ground→Simplify→Recommend→Options 节奏，附反模式表与 Smart skip 原则（见 first-use-intake.md） |
+| ✅ **主动删减原则** | 行程装不下时替用户删点并明说"删了什么、为什么删"，交付时输出删减说明（见 itinerary-selection-logic.md） |
 
 ---
 

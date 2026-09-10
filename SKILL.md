@@ -21,7 +21,22 @@ folder** (`{destination}-guide_files/`) containing downloaded venue photos, so e
 ships with a real image that always displays. Inline styles + minimal inline JS, no build scripts,
 no server, no external framework dependency.
 
-> 核心工作流：收集输入 → 判定区域 → 研究 → 生成 7 模块单页 HTML → 交付并预览。
+> 核心工作流：读取旅行者记忆 → 收集输入 → 判定区域 → 研究 → 生成 7 模块单页 HTML → 交付（说明删减）并更新记忆。
+
+## Shared trip memory
+
+Before intake, read `~/.inchina-travel-guide/MEMORY.md` if it exists, following
+`references/trip-memory.md`. Use it only for durable traveler context: pace, food and drink
+preferences, budget habits, payment/navigation preferences, companion situation, past-guide index
+and open threads. Pre-fill intake defaults from it and say so in one line
+（「已按你的常用偏好预填：…，有变化直接说」）.
+
+If the file does not exist, continue normally — never block on memory setup, never ask the user
+to create it, never mention the feature.
+
+After each delivered guide, update the memory file with durable facts only (template and update
+rules in `references/trip-memory.md`). Never store raw screenshots, ID/passport numbers, booking
+codes, full chat logs, or other sensitive material.
 
 ## Core Modules (final output — exactly 7)
 
@@ -60,7 +75,8 @@ rather than guessing their rules):
 | `references/image-and-source-policy.md` | sourcing images, ratings, and map links (region-aware) |
 | `references/itinerary-selection-logic.md` | choosing places / building daily itineraries from traveler interests |
 | `references/xhs-research.md` | **(optional)** harvesting traveler word-of-mouth from Xiaohongshu to enrich Dining research when the sandbox has browser/CDP tooling |
-| `references/first-use-intake.md` | handling intake (questionnaire vs. defaults) for a new request |
+| `references/trip-memory.md` | reading/updating the cross-trip traveler memory (`~/.inchina-travel-guide/MEMORY.md`) — what to pre-fill, what to persist, what never to store |
+| `references/first-use-intake.md` | handling intake (questionnaire vs. defaults) for a new request, incl. the 四拍 interaction format |
 
 > **Local images (must-do before writing cards)**: run the bundled Pexels fetcher
 > `scripts/fetch_pexels_image.py` to download each venue photo into `{destination}-guide_files/`
@@ -106,7 +122,11 @@ The questionnaire lets the user override the auto-detected region.
 
 ## 2. Intake (input collection)
 
+- Read the shared trip memory first (§ Shared trip memory / `references/trip-memory.md`) and
+  pre-fill stable preferences; ask only what neither the brief nor memory can answer.
 - Follow `references/first-use-intake.md`.
+- Every user-facing question follows the **四拍格式**（Re-ground → Simplify → Recommend → Options）—
+  see `references/first-use-intake.md §四拍交互格式` for the rules, examples and anti-patterns.
 - Default intake path: offer `assets/intake-questionnaire/index.html` for a preference-light
   request, or accept natural-language briefs directly (e.g. “帮我做一份成都 4 天 3 晚的攻略，
   2 人，喜欢美食和文化”).
@@ -208,5 +228,8 @@ HTML to the user** so they can view the result.
 ## 5. Delivery
 
 Deliver the `.html` **together with its `{destination}-guide_files/` image folder** (keep them side
-by side, or zip the pair), with a one-line summary (destination, days, what the 6 modules cover).
-The HTML file is the finished product; present it directly for preview.
+by side, or zip the pair), with a one-line summary (destination, days, what the modules cover).
+State in one short block **删掉了什么、为什么删**（the proactive cuts from
+`itinerary-selection-logic.md` — users forgive cuts they can see, not silent ones). Then update the
+shared trip memory (§ Shared trip memory). The HTML file is the finished product; present it
+directly for preview.
