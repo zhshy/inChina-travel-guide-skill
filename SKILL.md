@@ -76,6 +76,23 @@ The two modules split the job on purpose:
 
 Do not add, resurrect, or re-label these removed modules.
 
+## Published examples（成品基准）
+
+用本 Skill 生成、已上线且可公开访问的成品。**动手生成前可先打开其中一两个，把它们当作视觉与结构的基准**
+（版式节奏、卡片字段、语义标注用法、导航按钮的落位），比只读规范更快对齐全貌。三份都是「一个 HTML +
+同级 `{dest}-guide_files/` 本地图片目录」这套交付形态的实例。
+
+| 成品 | 链接 | 区域 / 类型 | 可重点参考 |
+|------|------|-------------|-----------|
+| 埃及 13 天 · 红海潜水 + 尼罗河人文 | <https://zhshy.github.io/Egypt/> | 境外（埃及）· 单人自由行 · 潜水 + 人文 | 境外分支的完整形态：Google 地图链接与评分来源标注、航站楼/检查站类风险提示、13 张逐日卡的时间轴密度、模块 7 未安排清单（10 项）与结构化调整请求 |
+| 乌兰布统 · 多伦 6 日自驾 | <https://zhshy.github.io/Ulanbutong/> | 境内（内蒙古）· 2 人自驾 · 国庆窗口 | 境内分支 + 节假日：×1.5 拥堵系数写法、酒店卡的平日/节假日参考价并列、携程与大众点评评分标注、点火票与动线咬合的处理 |
+| 北京 · 国庆 3 日游 | <https://zhshy.github.io/beijing-nationalday-guide/> | 境内（北京）· 城市游 | 城市密集动线的「一天一个主区域」排法与主动删点说明 |
+
+> 源码形态：每个实例都是一个独立仓库（`zhshy/Egypt`、`zhshy/Ulanbutong`、`zhshy/beijing-nationalday-guide`），
+> 仓库 `main` 分支根部即 `index.html` + `{dest}-guide_files/` + `.nojekyll`。
+> 发布流程见 `README.md` 的「🧪 实战示例：发布攻略到独立域名」。
+> 实例是**参考而非模板**——照抄它的目的地内容会违反下面的 "no reference-destination copy" 规则。
+
 ---
 
 ## 0. Reference documents
@@ -221,7 +238,9 @@ omit it or clearly mark it as approximate rather than fabricating.
 
 **Before writing any HTML, load `references/rendering-spec.md`** — it is the style/structure
 contract (file constraints, layout, seven-section shape, per-card fields, accessibility, definition
-of done). Follow it so every guide looks premium and consistent.
+of done). Follow it so every guide looks premium and consistent. If you want a concrete target,
+open one of the **Published examples** above — an existing page shows the card rhythm and semantic
+marking faster than prose can.
 
 Assemble **one HTML file + its sibling local-image folder** that works on phone + desktop:
 
