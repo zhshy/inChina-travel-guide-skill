@@ -176,9 +176,28 @@ nav anchors work. Keep section titles short and consistent between the nav and t
 - 向用户说明“取图通道在此环境不可用”，并提供可选方案（提供图库 key、或由用户本地给图/直链、或接受占位顶位）。
 - 兜底永远是：干净整洁 + 诚实说明，而不是一张内容错误或会裂的图。
 
+### 5.2 导航 button（App 深链唤起）
+
+Every venue card renders a small **「导航」button** next to its map web link:
+
+- Tap behavior follows the region-aware app priority chain — **境内: 高德 > 百度 > 苹果原生；
+  境外: Google 地图 > 苹果原生** — attempting each native app in order, then the first
+  provider's web version as the all-fail fallback.
+- WebView（微信/抖音等）与桌面端跳过 scheme 尝试，直接开链首供应商网页版；无坐标时退回卡片
+  自身的地图网页链接。
+- "装没装 App" 由 scheme 尝试 + 页面可见性超时判定（浏览器无法真正查询已装应用）——
+  诚实边界见 `references/app-deeplink-nav.md`。
+- Requires per-venue coordinates (GCJ-02 境内 / WGS-84 境外, 见
+  `research-data-shapes.md` → Coordinates field)；取不到坐标的卡片只保留网页链接，不硬造坐标。
+- Inline the ready JS module from `references/app-deeplink-nav.md` once at the end of `<body>`,
+  hard-coding `NAV_REGION` per guide. Button target ≥ 44 px touch height.
+
 
 - **Every venue/location** carries a precise **map action** — a Baidu Maps (domestic) / Google
-  Maps (international) link. Region is fixed per guide (see SKILL.md §1).
+  Maps (international) link, plus a **「导航」button** implementing the app deep-link chain
+  (高德→百度→苹果 for domestic, Google→苹果 for international, with WebView/desktop/no-coords
+  fallbacks). Region is fixed per guide (see SKILL.md §1); behavior contract and the
+  copy-paste inline JS module live in `references/app-deeplink-nav.md` — follow §5.2 below.
 - **Every restaurant score** shows its **source label**（大众点评：x.x / Google：x.x）, and a
   score is optional — a guide with zero ratings is complete. Never invent a score.
 - **No fabricated facts**: opening hours, prices, ratings and map coordinates must be from research.

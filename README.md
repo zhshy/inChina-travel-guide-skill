@@ -14,6 +14,12 @@
 - **境外**：使用 Google Maps、官方网站、Google 评分
 - 用户也可在问卷中手动修正区域判断
 
+### 🧭 导航按钮 · App 深链唤起
+- 每张地点卡片带「导航」按钮，按区域优先级唤起原生地图 App：**境内 高德 > 百度 > 苹果原生**；
+  **境外 Google 地图 > 苹果原生**（见 `references/app-deeplink-nav.md`）
+- "装没装 App" 用 scheme 尝试 + 可见性超时判定，全失败回落链首网页版；无坐标回落卡片地图链接
+- 微信/抖音等 WebView 内自动跳过 scheme，直接开网页版；桌面端直接开网页版
+
 ### 🧠 跨行程记忆
 - 首次生成后，把长期有效的旅行偏好（节奏、饮食忌口、预算习惯、支付/导航偏好、常同行人）沉淀到
   `~/.inchina-travel-guide/MEMORY.md`（见 `references/trip-memory.md`）
@@ -147,6 +153,7 @@ inChina-travel-guide-skill/
     ├── research-data-shapes.md      # 7 大模块字段结构（含区域分支）
     ├── image-and-source-policy.md   # 图片与来源策略（Pexels 为主 + 事实核验来源）
     ├── itinerary-selection-logic.md # 行程与地点选择逻辑 + 主动删减原则
+    ├── app-deeplink-nav.md          # 导航按钮 App 深链唤起（高德>百度>苹果 / Google>苹果）与降级
     ├── xhs-research.md              # 小红书口碑调研（可选增强，沙盒有 CDP 时启用）
     └── rendering-spec.md            # 单页 HTML 渲染规范（HTML + 本地图目录交付）
 ```
@@ -176,6 +183,7 @@ inChina-travel-guide-skill/
 | ✅ **新增跨行程记忆** | `references/trip-memory.md` + `~/.inchina-travel-guide/MEMORY.md`：生成后沉淀长期偏好，复用自动预填，敏感信息禁存 |
 | ✅ **四拍交互格式** | 所有追问统一 Re-ground→Simplify→Recommend→Options 节奏，附反模式表与 Smart skip 原则（见 first-use-intake.md） |
 | ✅ **主动删减原则** | 行程装不下时替用户删点并明说"删了什么、为什么删"，交付时输出删减说明（见 itinerary-selection-logic.md） |
+| ✅ **导航按钮 App 深链唤起** | 卡片级「导航」按钮：境内 高德>百度>苹果原生、境外 Google>苹果原生优先唤起 App，未安装自动回落；WebView/桌面/无坐标三级降级（见 app-deeplink-nav.md） |
 
 ---
 

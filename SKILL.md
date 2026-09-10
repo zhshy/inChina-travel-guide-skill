@@ -75,6 +75,7 @@ rather than guessing their rules):
 | `references/image-and-source-policy.md` | sourcing images, ratings, and map links (region-aware) |
 | `references/itinerary-selection-logic.md` | choosing places / building daily itineraries from traveler interests |
 | `references/xhs-research.md` | **(optional)** harvesting traveler word-of-mouth from Xiaohongshu to enrich Dining research when the sandbox has browser/CDP tooling |
+| `references/app-deeplink-nav.md` | **before building the HTML** — the 导航 button app deep-link chain (高德>百度>苹果 / Google>苹果), WebView/desktop/no-coords fallbacks, and the copy-paste inline JS module |
 | `references/trip-memory.md` | reading/updating the cross-trip traveler memory (`~/.inchina-travel-guide/MEMORY.md`) — what to pre-fill, what to persist, what never to store |
 | `references/first-use-intake.md` | handling intake (questionnaire vs. defaults) for a new request, incl. the 四拍 interaction format |
 
@@ -207,7 +208,10 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   Unscheduled), each with a clear numbered section and anchor navigation at top.
 - Fixed **blue/teal editorial theme** — do not ask the user to pick a color.
 - Every place/venue card includes: name, description, a **precise location link** (Baidu Maps
-  domestic / Google Maps international), and a **local image** (`<img class="card-img" ...>` with
+  domestic / Google Maps international), a **「导航」button** running the app deep-link chain
+  （境内 高德>百度>苹果 / 境外 Google>苹果，含 WebView、桌面与无坐标降级 — see
+  `references/app-deeplink-nav.md` and rendering-spec §5.2), and a **local image**
+  (`<img class="card-img" ...>` with
   `src="{dest}-guide_files/{file}"`). Restaurant cards must label the **rating source**
   (大众点评 / Google).
 - Inline the CSS (and only the JS truly needed); keep the HTML portable so it can be opened from

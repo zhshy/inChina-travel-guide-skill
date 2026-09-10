@@ -34,6 +34,15 @@ Every research session starts from a global context object:
 一律按 `region = "international"` 处理（Google Maps + 官网 + Google 评分），
 并在当地贴士中提示港澳通行证 / 入台证等所需证件（以官方最新规定为准）。
 
+### Coordinates field (deeplink-ready)
+
+Venue locations may carry `coordinates: { "lat": 39.913, "lng": 116.397, "sys": "gcj02" }` —
+`sys` is `"gcj02"` for domestic venues and `"wgs84"` for international ones. Coordinates power
+the card's 导航 deep-link button (see `app-deeplink-nav.md`); collect them from the venue's
+Baidu/Amap POI page or share link while researching the map link, converting BD-09 → GCJ-02
+when needed (converter in `app-deeplink-nav.md`). A venue without coordinates simply falls back
+to its map web link — never estimate or fabricate coordinates.
+
 ## Module 1: Itinerary (行程)
 
 ```json
@@ -81,7 +90,7 @@ Every research session starts from a global context object:
         "location": {
           "address": "string",
           "map_link": "string — Baidu Maps (domestic) or Google Maps (international) link",
-          "coordinates": "optional {lat, lng}"
+          "coordinates": "optional {lat, lng, sys:'gcj02'|'wgs84'} — powers the 导航 deep-link button, see 'Coordinates field' above"
         },
         "official_info": {
           "type": "wechat" | "website",
