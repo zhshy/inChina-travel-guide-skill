@@ -33,10 +33,10 @@ its Bali content.
 
 ## 2. Layout & visual system
 
-- **Fixed blue/teal editorial theme** (do not offer a color picker). A refined palette such as:
-  deep ink/teal headings (`#0d3b40`–`#0b3a45` range), a teal accent for links/underlines
-  (`#12657c`–`#0f766e` range), soft warm paper background (`#f6f4ee`–`#f5f2ea` range), generous
-  whitespace, hairline rules (`rgba(...)~8–12%` borders) instead of heavy boxes.
+- **Fixed blue/teal editorial theme** (do not offer a color picker). Soft warm paper background
+  (`#f6f4ee`–`#f5f2ea` range), generous whitespace, hairline rules (`rgba(...)~8–12%` borders)
+  instead of heavy boxes. **All foreground colours come from the §2.1 semantic tokens — that
+  section is the single source of truth; do not invent extra accent colours.**
 - Two clearly separated surfaces: **cover/hero** (destination title, date/duration, travel style
   chips, one evocative image or a clean gradient) and the **body** (cream/paper panels).
 - **Card images** (reuse this pattern for every venue card): make the card `overflow:hidden`, put a
@@ -50,6 +50,51 @@ its Bali content.
   do not rely on a web font.
 - **Responsive**: fluid single column on ~390 px; a narrow content column with comfortable measure
   (~640–720 px max) on ~1440 px. Nothing overflows horizontally at 390 px.
+
+### 2.1 统一语义标注系统（同一信息 → 同一颜色 → 同一形式）
+
+**页面一致性优先于单卡表现力。** 同一种信息在全页必须用**同一颜色、同一形式、同一位置**出现；
+不同信息类型不得互相借用颜色。生成前先铺好下表这套 CSS 变量并全程执行，不得中途即兴换色。
+
+| 信息类型 | 专用变量 | 固定形式 |
+|---|---|---|
+| 地点 / 名称 / 标题 | `--ink` 墨绿 `#0d3b40` | 加粗；同一地点全页统一写法（全称或统一简称，二选一） |
+| 时间 | `--time` 青灰 `#5f7d85` | 统一 `HH:MM`；统一前缀符号（如 `09:00 ·`）或统一 chip；位置固定在行程条开头 / 卡片同一行位 |
+| 链接 · 可点击（地图、预约、官方渠道） | `--teal` 青 `#12657c` | 统一下划线或统一按钮样式 |
+| 价格 / 费用 | `--price` 暖褐 `#8a6a3b` | 统一 `¥120` 写法 + 统一 chip 样式 |
+| 警示（硬约束 / 风险：闭馆、必须预约、节假日拥堵） | `--warn` 红 `#b23b3b` | 全页**唯一**的红色，仅此用途 |
+| 评分来源 / 元信息 | `--meta` 中性灰 | 统一小号标签 |
+
+```css
+:root{
+  --ink:#0d3b40;    /* 地点/名称/标题 */
+  --time:#5f7d85;   /* 时间（专用，不作他用） */
+  --teal:#12657c;   /* 链接/可点击 */
+  --price:#8a6a3b;  /* 价格/费用（专用） */
+  --warn:#b23b3b;   /* 警示：唯一红色，仅限硬约束/风险 */
+  --meta:#7a8a8d;   /* 元信息/来源标签 */
+  --mark:#f3ead6;   /* 文字底色高亮（最重档，全页合计 ≤3 处） */
+}
+```
+
+**强调只有三档，跨档混用即违规：**
+
+1. **语义色**（默认档）— 按上表着色，不额外加粗、不加底色；
+2. **标签 chip**（中度）— 同一类标签全页同形状同尺寸（如「必去」「需预约」）；
+3. **文字底色高亮**（最重档，**全页合计 ≤ 3 处**）— 只给"错过会耽误行程"的信息
+   （如"故宫提前 7 天 20:00 抢票""周一闭馆"），底色统一 `--mark`，不逐处换色。
+
+禁止：同一信息类型出现两种颜色（时间一处黄一处红）；用高亮/警示色标注普通描述；为装饰而加底色。
+
+**呈现形式统一（防表格/块状、横/竖混排）：**
+
+- 同一模块的同一类信息**只能用一种形式**：卡片或表格，二选一，全模块内不得混用。
+- **表格仅在满足全部条件时使用**：≥ 3 条同类短字段 + 需要对齐比较（如"票价一览""开放时间一览"）
+  + 全页表格样式统一。其余场景一律用卡片块。
+- 卡片内部一律**纵向堆叠**；横向排列只允许两类元素——chips 标签行、顶部导航条。
+  禁止整卡横排，禁止把"时间 + 地点 + 价格"挤进同一行。
+- 同类卡片的字段顺序与层级全页一致（场所卡固定为：图 → 名称 → 一句话 → 时间/价格 → 地址链接 → 说明）。
+- 每个信息类型的图标/前缀符号固定一个，不得同义换形（时间不能一处 `·`、一处 🕘）。
 
 ## 3. Navigation & page order
 
@@ -68,6 +113,10 @@ Each section gets `<section id="itinerary|attractions|shopping|experiences|dinin
 nav anchors work. Keep section titles short and consistent between the nav and the section heading.
 
 ## 4. Per-section content shape
+
+Every field listed below is rendered through the **§2.1 semantic marking system** — the same
+information type gets the same colour and the same form in all seven modules. When a section's
+field list and §2.1 seem to conflict, §2.1 wins.
 
 ### 行程 Itinerary
 - A short overview paragraph, then one block **per day**: date/相对(第 N 天)、当日主题、上午/中午/下午的
@@ -214,6 +263,9 @@ Every venue card renders a small **「导航」button** next to its map web link
 - The cover hero does not visually collide/clip its text; cover text is inside the image/surface.
 - At ~390 px and ~1440 px there is no horizontal overflow.
 - Respect `prefers-reduced-motion` (keep animations minimal anyway).
+- **一致性自检（§2.1）**：时间 / 价格 / 地点 / 链接每类信息全页只有一种颜色、一种写法、一个位置；
+  同一模块内没有表格与卡片混用；横排元素只有 chips 与导航条；
+  文字底色高亮全页 ≤ 3 处且只标硬约束；红色只出现在警示用途。
 
 ## 7. Definition of done
 

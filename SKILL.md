@@ -206,7 +206,9 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   **配图不是硬性底线**：某地点取不到贴切图时可整洁无图，不要硬塞不相关的图。
 - **7 sections only** (order: Itinerary, Attractions, Experiences, Dining, Shopping, Local Tips,
   Unscheduled), each with a clear numbered section and anchor navigation at top.
-- Fixed **blue/teal editorial theme** — do not ask the user to pick a color.
+- Fixed **blue/teal editorial theme** — do not ask the user to pick a color. Follow the
+  **统一语义标注系统**（rendering-spec §2.1）：同一类信息（时间/价格/地点/链接/警示）全页同一颜色、
+  同一写法、同一形式；强调只有三档且文字底色高亮全页 ≤3 处；同一模块内不得表格与卡片混用。
 - Every place/venue card includes: name, description, a **precise location link** (Baidu Maps
   domestic / Google Maps international), a **「导航」button** running the app deep-link chain
   （境内 高德>百度>苹果 / 境外 Google>苹果，含 WebView、桌面与无坐标降级 — see
