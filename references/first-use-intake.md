@@ -6,15 +6,15 @@ Before offering the questionnaire, read the shared trip memory (`~/.inchina-trav
 
 If the user supplied a complete brief (destination, dates or duration, travelers, rhythm/default permission, interests and constraints), skip the questionnaire and start immediately. If the brief supplies only destination, dates/duration and travelers, show the questionnaire and ask exactly once: `其他内容要填一下问卷，还是全部按主流默认方案安排？如果不需要问卷，直接回复“按默认”即可。` A refusal or default permission completes intake and must start work without another question. A destination-only request is also valid without a questionnaire when the user explicitly asks the Agent to choose sensible defaults. If the host cannot open local HTML, provide the same one-question choice and use a short conversational fallback only when the user elects to provide preferences.
 
-The only user-facing transport/accommodation note should be: booked transport or accommodation can be supplied as screenshots or text; otherwise those sections remain pending. Do not explain edition boundaries, excluded modules, internal architecture or comparison features unless the user asks.
+The only user-facing transport/accommodation note should be: booked transport or accommodation can be supplied as screenshots or text; otherwise transport stays pending and lodging is filled with a default pick — a named hotel inside the stay base that sits on the day routes（境内 携程高分酒店 / 境外 Google 高分酒店，见 `rendering-spec.md` §4 餐饮住宿）。Do not explain edition boundaries, excluded modules, internal architecture or comparison features unless the user asks.
 
-The public questionnaire contains only core handbook inputs: destination; dates or days; travelers and relationship; broad budget; pace; interests; must-go places; exclusions; food/accessibility/special requirements. It never asks for flight or hotel selection criteria and never triggers commercial recommendations.
+The public questionnaire contains only core handbook inputs: destination; dates or days; travelers and relationship; broad budget; pace; interests; must-go places; exclusions; food/accessibility/special requirements. It never asks for flight or hotel selection criteria — the lodging tier follows the broad budget plus route fit — and it never triggers commercial recommendations or booking links.
 
 Every optional field has a neutral default. Missing fields do not block generation. Use mainstream first-visit defaults, label material assumptions and keep unprovided transport or accommodation pending.
 
 Suggested first response:
 
-> 我可以为你制作一份完整的个性化旅行手册，包括每日行程、景点、购物、当地体验、特色餐饮和当地贴士，并生成适合手机与电脑查看的网页。
+> 我可以为你制作一份完整的个性化旅行手册，包括每日行程、景点、购物、当地体验、特色餐饮与住宿和当地贴士，并生成适合手机与电脑查看的网页。
 >
 > 这是 1–3 分钟的旅行需求问卷，填完后把它生成的提示词发给我即可。如果不想填，直接回复“按默认”，其他内容会按保守、主流的方案安排，不再追问。
 

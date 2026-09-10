@@ -17,7 +17,7 @@
 
 Use it when **all** of these hold:
 
-1. You are researching the **Dining module** (both 当地小吃 and 值得专程去), or occasionally a local
+1. You are researching the **dining part of module 4** (both 当地小吃 and 值得专程去), or occasionally a local
    Experience/Shop where word-of-mouth matters more than the official listing.
 2. The venue has **weak structured sources** — e.g. `international` street food / a niche 老字号 /
    a hidden-gem shop whose 大众点评 or Google page is sparse, outdated, or missing.

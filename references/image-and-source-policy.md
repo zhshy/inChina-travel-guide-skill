@@ -35,6 +35,8 @@ All research must respect the `region` flag set at the start of the build.
 | **Venue photos (embed in HTML)** | **Pexels script (§0) → local download** | styled placeholder |
 | Fact-check hours/tickets | WeChat Official Account or Baidu Maps info | Local travel blogs |
 | Map location | Baidu Maps static image or embed link | - |
+| Restaurant score | **Dianping (大众点评) — high-rated venues** | - |
+| Hotel score & price | **Ctrip (携程) listing — high-rated hotels** | Hotel official site |
 
 ### International (境外)
 
@@ -44,6 +46,7 @@ All research must respect the `region` flag set at the start of the build.
 | Restaurant/food fact-check | Official website or Google Maps | TripAdvisor |
 | Map location | Google Maps static image or embed link | - |
 | Opening hours / tickets | Official website | Google Maps |
+| Restaurant / hotel score | **Google Maps — high-rated venues** | TripAdvisor / Booking (if more relevant) |
 
 ---
 
@@ -88,13 +91,23 @@ All research must respect the `region` flag set at the start of the build.
 
 ## Rating Sources
 
-| Region | Primary Rating | Secondary Rating |
-|--------|---------------|------------------|
-| Domestic | Dianping (大众点评) score | - |
-| International | Google Maps rating | TripAdvisor (if more relevant) |
-| Either (optional) | Xiaohongshu word-of-mouth (`xhs`) | — use only to corroborate a venue whose official/score coverage is weak, not as the primary rating |
+| Region | Content | Primary Rating | Secondary Rating |
+|--------|---------|---------------|------------------|
+| Domestic | Restaurant | **Dianping (大众点评)** score — high-rated venues | - |
+| Domestic | Hotel | **Ctrip (携程)** score + review count — high-rated hotels | Hotel official site |
+| International | Restaurant | **Google Maps** rating — high-rated venues | TripAdvisor (if more relevant) |
+| International | Hotel | **Google Maps** rating — high-rated hotels | Booking / Agoda (if more relevant) |
+| Either (optional) | Restaurant | Xiaohongshu word-of-mouth (`xhs`) | — use only to corroborate a venue whose official/score coverage is weak, not as the primary rating |
 
-When displaying ratings, always label the source clearly (e.g., "大众点评：4.5/5" or "Google：4.6/5").
+When displaying ratings, always label the source clearly (e.g., "大众点评：4.5/5"、"携程：4.7/5
+（3200 条）" or "Google：4.6/5").
+
+**Hotel picks** default to a high platform score — 境内 携程 ≥ 4.5（优先 4.7+ 且有足量点评数），
+境外 Google ≥ 4.3 — inside a lodging area that sits on the day routes. Inside a China holiday
+window (元旦/过年/清明/端午/五一/中秋/十一/圣诞), record **both** the weekday reference price and the
+holiday reference price on the card and label them 参考价（以平台实时价格为准）: surface the markup,
+do not decide for the traveler and do not impose a markup threshold. Never fabricate a price — if
+the price cannot be checked, keep the score and the area and say so.
 A venue corroborated via Xiaohongshu notes shows the tag **"小红书口碑"** (`rating.source: "xhs"`) and
 normally carries **no numeric score** unless a specific, sourced one exists. The optional
 Xiaohongshu harvesting workflow is in `references/xhs-research.md`; it is an enhancement, never a

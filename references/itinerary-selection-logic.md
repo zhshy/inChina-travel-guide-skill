@@ -76,9 +76,35 @@ Cut early and explicitly when a candidate:
 During assembly, record every cut with a one-line reason — these reasons feed Module 7's
 "why it was left out" field and the delivery-time 删减说明 (cut list + reasons, stated in one
 short block). The guiding principle: **行程不是越满越好，是越顺越好** — a guide that runs
-smoothly beats a checklist that exhausts. Restaurants and cafes are supply points on the day's
-route, never anchors that bend the route — only user-named or reservation-required venues may
-shape a day around them.
+smoothly beats a checklist that exhausts. Restaurants, cafes and hotels are supply points on the
+day's route, never anchors that bend the route — only user-named or reservation-required venues
+may shape a day around them.
+
+## Meals & lodging: areas here, names in module 4
+
+The itinerary answers "这个点我该往哪片走", not "该进哪家店":
+
+- **Write the range**, e.g. 「午餐：XX 片区」「晚餐：回 XX 片区解决」「住宿：建议住 XX 站一带」.
+  What the traveler needs mid-day is 顺路; a named restaurant two metro stops off the route is
+  worse advice than a good area sitting right on it.
+- **Never name restaurants or hotels in the itinerary.** The named venues live in module 4 —
+  module 1 may point at the module ("店名见第 4 模块") but must not carry the names itself.
+  This keeps the day driven by geography instead of by a shop.
+- The area you point at still has to be real and on the day's path — verify that the district you
+  send them to actually has dining coverage at that hour (a museum district at 21:00 may not).
+
+## One stay base per city
+
+Prefer **a single lodging base** that reaches every day's route in one transfer over moving hotels
+mid-trip — a hotel move costs half a day and breaks the rhythm. Choose the base area first
+(centred on the day routes), then let module 4 pick a high-scoring hotel inside that area
+(境内 携程 / 境外 Google，见 `rendering-spec.md` §4 餐饮住宿).
+
+When the trip genuinely splits — a two-city run, or one remote day far from everything — say which
+nights sit in which base and why, rather than silently booking two hotels.
+
+If the traveler already booked lodging (screenshot or text), that base is fixed: build the day
+routes around it and skip the lodging picks.
 
 ## Day construction
 

@@ -104,7 +104,7 @@ seven Chinese titles at the very top:
 1. 行程 Itinerary
 2. 景点 Attractions
 3. 体验 Experiences
-4. 餐饮 Dining (two subgroups only)
+4. 餐饮住宿 Dining & Lodging (three subgroups only)
 5. 购物 Shopping
 6. 当地贴士 Local Tips
 7. 未安排的景点清单 Unscheduled
@@ -121,6 +121,10 @@ field list and §2.1 seem to conflict, §2.1 wins.
 ### 行程 Itinerary
 - A short overview paragraph, then one block **per day**: date/相对(第 N 天)、当日主题、上午/中午/下午的
   按时间线安排(时间 · 地点 · 活动 · 简短说明)、餐食建议。可用 `details/summary` 收起长日。
+- **餐食与住宿在行程里只写范围，不点名**：午餐/晚餐写"顺路解决的一片区域"（如「午餐：XX 片区」
+  「晚餐：回 XX 片区解决」），住宿写"建议住哪一片/哪个地铁站一带"（如「住宿：XX 站一带，
+  每天换乘一次可达」）。具体餐厅名与酒店名**一律放第 4 模块**——行程先保动线顺，
+  不让一家店反向拉扯路线。可加一句"店名见第 4 模块"，但不要在这里写店名。
 - Give at least arrival and departure days a light buffer note; never leave a day empty.
 - **默认时间盒**（默认受众＝中国年轻视觉型旅客，详见 `itinerary-selection-logic.md`）：
   - 早上 **08:00 出发**；午餐排在 **13:00–14:30 之间任取一时段、时长约 1 小时**；
@@ -139,16 +143,37 @@ field list and §2.1 seem to conflict, §2.1 wins.
 - 有真实本地身份的文化活动/工坊/演出/季节活动。卡片含名称、时长、价格、地点+地图链接、如何预约、
   “为什么在这里做、适合谁”。
 
-### 餐饮 Dining — 只两类
-- 当地小吃/街头小吃：每项解释是什么、口感、常见于何处、怎么点，给出价格与地标；可点名一家代表店。
-- 值得专程去：招牌菜、人均区间、营业时间、地图链接，并写明“值得专程去的理由”。
-- 明确不出现高端餐厅/咖啡/酒吧/连锁。每张餐厅卡标注评分来源（境内=大众点评、境外=Google）。
-- 若某家店是经小红书笔记佐证（来源 `xhs`，见 `xhs-research.md`），卡片评分来源标为
-  **“小红书口碑”**，通常不写分值，且仍需保留官方地址与地图链接。
-- **门店时效弹性**：具体门店的排队/营业/口碑变化很快。能核实到可靠且具代表性的具名门店（如
-  老字号）就直接点名；否则可用“方向性推荐”——写清推荐哪种业态/口味、去哪片找、怎么判断好坏，并提示
-  “在地图/点评按‘离你最近的分店’选择、以到店为准”。这样做优于硬塞一个可能已过时的门店名。
-- **评分**：得分可省略（无评分的餐饮卡仍完整）；只给来源标签即可，切勿编造当前分值。
+### 餐饮住宿 Dining & Lodging — 只三类
+
+- **当地小吃/街头小吃**：每项解释是什么、口感、常见于何处、怎么点，给出价格与地标；
+  **点名一家代表店**。
+- **值得专程去**：招牌菜、人均区间、营业时间、地图链接，并写明"值得专程去的理由"；
+  **给出具体店名**。
+- **住宿推荐**：**给出具体酒店名**，并含所在片区/最近地铁站（说明为何顺路）、档次、
+  平台评分与点评数、平日参考价与节假日参考价、"为什么住这里"的一句具体理由。
+- **必须点名（本模块硬规则）**：这里的餐厅与酒店都要给出**真实、可在平台搜到的具体名称**。
+  "推荐 XX 片区"这类范围式回答在本模块不合格——**范围属于行程模块**。每张卡带名称、地址、
+  地图链接与「导航」按钮，用户能直接搜到、能导航过去。
+- **取值口径**（默认档，用户明确要求更便宜/更小众时按其偏好调整，但始终给出评分来源与分值）：
+  - 境内酒店：从**携程**评分中选高分酒店——默认 携程 ≥ 4.5，优先 4.7+ 且有足量点评数；
+  - 境内餐厅：搜**大众点评**高分店——默认 ≥ 4.5，小吃摊档可放宽至 4.3 但须有真实点评支撑；
+  - 境外酒店：查 **Google Maps** 高评分——默认 ≥ 4.3；
+  - 境外餐厅：查 **Google** 高评分——默认 ≥ 4.5。
+- **住宿动线优先**：先顺路，再评分。优先**一城一个住宿基地**（每天换乘一次可达），
+  而不是换三四家酒店——中途搬一次酒店要吃掉半天。行程确实分段时，写明哪几晚住哪、为什么。
+- **节假日价格语境**：行程落在节假日窗口（元旦/过年/清明/端午/五一/中秋/十一/圣诞）时，
+  酒店卡同时写出**平日参考价**与**节假日参考价**（如 `平日 ¥420 / 节假日 ¥880`），
+  把涨幅摆给用户自己判断，**不设"溢价过高"的硬阈值**；涨幅明显时可加一句
+  "可同时考虑同片区备选"。价格须来自实际查询并标"参考价，以平台实时价格为准"。
+- 明确不出现高端餐厅/咖啡/酒吧/连锁；也不做预订入口。
+- **评分来源必须标注**：境内餐厅=大众点评、境内酒店=携程；境外餐厅与酒店=Google 评分。
+- 若某家店/酒店是经小红书笔记佐证（来源 `xhs`，见 `xhs-research.md`），卡片评分来源标为
+  **"小红书口碑"**，通常不写分值，且仍需保留官方地址与地图链接。
+- **点名核实不到时的例外**：具体门店的排队/营业/口碑变化很快。只有当确实核不到可靠具名门店时，
+  才降级为"方向性推荐"——写清推荐哪种业态/口味、去哪片找、怎么判断好坏，**并在卡片上标明
+  「未能核实到具体门店」**，提示"在地图/点评按'离你最近的分店'选择、以到店为准"。
+  这是例外而非常态；**不得为凑格式编造店名或酒店名**。
+- **评分**：得分可省略（无评分的卡片仍完整）；只给来源标签即可，切勿编造当前分值。
 
 ### 购物 Shopping
 - 购物区/商圈卡片 + 特色伴手礼列表。伴手礼:是什么、去哪买、怎么挑、携带/托运注意。
@@ -210,6 +235,8 @@ field list and §2.1 seem to conflict, §2.1 wins.
 
 **图片归属范围**
 - 每个景点 / 体验 / 值得专程去的餐厅 **尽量配图**：能取到内容贴切的图就放，页面观感更好。
+- **住宿卡不作配图要求**：酒店实拍难以从 Pexels 稳定取到贴切画面，硬配一张通用房间图属于张冠李戴。
+  酒店卡靠排版与信息密度撑住（名称、片区、评分、参考价、理由），可整洁无图。
 - **不是硬性底线**：若某个“必去”景点确实取不到贴切、可授权的图（搜不到、或图明显不符），
   **可以不放图**——保持卡片整洁、靠排版撑住即可，不要为了凑数硬塞一张不相关的图，
   也不要放会裂的远程图或强行画占位块。
@@ -247,8 +274,9 @@ Every venue card renders a small **「导航」button** next to its map web link
   (高德→百度→苹果 for domestic, Google→苹果 for international, with WebView/desktop/no-coords
   fallbacks). Region is fixed per guide (see SKILL.md §1); behavior contract and the
   copy-paste inline JS module live in `references/app-deeplink-nav.md` — follow §5.2 below.
-- **Every restaurant score** shows its **source label**（大众点评：x.x / Google：x.x）, and a
-  score is optional — a guide with zero ratings is complete. Never invent a score.
+- **Every restaurant and hotel score** shows its **source label**（境内餐厅 大众点评：x.x /
+  境内酒店 携程：x.x / 境外 Google：x.x）, and a score is optional — a guide with zero ratings is
+  complete. Never invent a score.
 - **No fabricated facts**: opening hours, prices, ratings and map coordinates must be from research.
   If unverifiable, omit or clearly mark as approximate — never invent.
 - No content copied from another destination; no placeholder venues; no filler like “注意安全/记得打卡”.
@@ -266,6 +294,11 @@ Every venue card renders a small **「导航」button** next to its map web link
 - **一致性自检（§2.1）**：时间 / 价格 / 地点 / 链接每类信息全页只有一种颜色、一种写法、一个位置；
   同一模块内没有表格与卡片混用；横排元素只有 chips 与导航条；
   文字底色高亮全页 ≤ 3 处且只标硬约束；红色只出现在警示用途。
+- **模块 4 点名自检**：餐饮与住宿的每张卡都有**具体、可在平台搜到的名称**，没有用"XX 片区"代替；
+  境内酒店标了**携程评分（含点评数）**，境外酒店与餐厅标了 **Google 评分**；
+  节假日窗口内的酒店卡同时有平日与节假日参考价，且标了"以平台实时价格为准"。
+- **行程不点名自检**：模块 1 的餐食与住宿只出现范围（片区 / 地铁站一带），
+  没有把模块 4 的具体店名搬进行程。
 
 ## 7. Definition of done
 

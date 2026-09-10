@@ -4,9 +4,10 @@ description: |
   Generates a personalized, comprehensive single-page HTML travel guide for any destination.
   It first detects whether the destination is inside mainland China (domestic) or abroad
   (international) and switches data sources accordingly: Baidu Maps + WeChat Official Accounts
-  + Dianping for domestic, Google Maps + official websites + Google ratings for international.
+  + Dianping (dining) + Ctrip (lodging) for domestic, Google Maps + official websites
+  + Google ratings (dining and lodging) for international.
   The final deliverable is a self-contained, mobile-friendly HTML file with exactly seven modules
-  (行程/景点/购物/体验/餐饮/当地贴士/未安排的景点清单).
+  (行程/景点/体验/餐饮住宿/购物/当地贴士/未安排的景点清单).
   Trigger on: "帮我做一份 X 的旅行攻略/手册/指南", "X 玩 N 天怎么安排",
   "X travel guide / itinerary", trip planning with destination + duration + traveler profile.
 ---
@@ -45,19 +46,33 @@ The final HTML guide contains **these seven sections, and nothing else**:
 1. **行程 Itinerary** — day-by-day plan with time slots and activities
 2. **景点 Attractions** — must-see landmarks and hidden gems
 3. **体验 Experiences** — cultural and unique local experiences
-4. **餐饮 Dining** — strictly limited to two sub-categories:
+4. **餐饮住宿 Dining & Lodging** — strictly limited to three sub-categories:
    - Local Snacks / Street Food (当地小吃推荐)
    - Signature Restaurants Worth a Detour (值得专程去)
+   - Lodging (住宿推荐)
 5. **购物 Shopping** — best shopping areas and souvenirs
 6. **当地贴士 Local Tips** — practical local advice (transport, culture, weather, payment, safety)
 7. **未安排的景点清单 Unscheduled** — worthwhile places that were **not** fitted into the daily
    plan but lie within **30 km of a day's route**; each card can be ticked and turned into a
    copy-paste AI prompt that regenerates the itinerary with those places added.
 
+### Naming rule — module 1 gives areas, module 4 gives names
+
+The two modules split the job on purpose:
+
+- **模块 1 行程只写范围**：餐食与住宿在行程里以**顺路的一片区域**出现（「午餐：XX 片区」
+  「住宿建议：住 XX 地铁站一带」），不点名。日程首先服从动线——一家要绕两站的店，不如路口那片
+  能解决午饭的区域有用。
+- **模块 4 必须点名**：餐饮与住宿的每一条推荐都要给出**真实、可在平台搜到的具体名称**——
+  餐厅名与酒店名。这一模块里「推荐 XX 片区」不合格，范围属于行程模块。
+- **唯一例外**：确实核实不到可靠具名门店时，才降级为方向性推荐，并在卡片上写明
+  「未能核实到具体门店」。绝不为满足规则编造名称。
+
 ### Removed modules (do NOT include)
 - ❌ Language Tips / 语言锦囊 — removed
 - ❌ Before-departure / Preparation / 出发前准备 — removed
-- ❌ Flight / hotel booking engines — never triggered
+- ❌ Flight / hotel **booking engines**（预订入口、比价下单）— never triggered. Lodging
+  **recommendations** are not a booking engine and belong in module 4.
 
 Do not add, resurrect, or re-label these removed modules.
 
@@ -70,7 +85,7 @@ rather than guessing their rules):
 
 | File | Load when… |
 |------|-----------|
-| `references/research-data-shapes.md` | defining the fields to collect for each of the six modules |
+| `references/research-data-shapes.md` | defining the fields to collect for each of the seven modules |
 | `references/rendering-spec.md` | **before building the HTML** — the style/structure contract for the final page |
 | `references/image-and-source-policy.md` | sourcing images, ratings, and map links (region-aware) |
 | `references/itinerary-selection-logic.md` | choosing places / building daily itineraries from traveler interests |
@@ -88,7 +103,7 @@ rather than guessing their rules):
 > `assets/canonical/product/index.html` is kept **only as a visual-style reference** (its editorial
 > look, card rhythm, typography). Open it in a browser if you need a sense of a premium handbook
 > aesthetic. **Never copy its Bali content, never reproduce its 8-chapter structure, and do not try
-> to drive it with any script.** You render a fresh 6-module page yourself.
+> to drive it with any script.** You render a fresh 7-module page yourself.
 
 ---
 
@@ -115,6 +130,7 @@ Use `region` to pick data sources everywhere:
 | Location map | Baidu Maps link | Google Maps link |
 | Official info | WeChat Official Account name | Official website URL |
 | Restaurant rating | Dianping (大众点评) score | Google Maps rating |
+| Lodging rating | Ctrip (携程) score — high-rated hotels only | Google Maps rating |
 | Photos | **Pexels via `scripts/fetch_pexels_image.py`** (both regions) — see §4 / rendering-spec §5.1 | same |
 
 The questionnaire lets the user override the auto-detected region.
@@ -147,7 +163,14 @@ Research each module with accurate, current, verifiable data. Quality gates:
 - **Experiences**: cultural activities, classes, workshops, performances, seasonal or local events
   with real local identity.
 - **Dining**: ONLY local snacks / street food AND restaurants worth a detour. Skip fine dining,
-  cafes, bars, and chains.
+  cafes, bars, and chains. Every entry is a **named venue** carrying its rating source —
+  境内搜大众点评高分店，境外搜 Google 高评分餐厅。
+- **Lodging**: recommend **named hotels**, chosen by platform score —
+  境内从携程评分中选高分酒店，境外查 Google Maps 高分酒店。Default thresholds: 携程 ≥ 4.5
+  （优先 4.7+ 且有足量点评数）/ Google ≥ 4.3；小吃摊档可放宽到点评 4.3。Prefer **one stay base
+  per city** that sits on the day routes over re-booking hotels. Inside a 中国节假日窗口 (§3.1),
+  record **both** the 平日参考价 and the 节假日参考价 on the card so the traveler can judge the
+  markup themselves — never hand over a hotel without price context, and never fabricate a price.
 - **Shopping**: distinctive local products + best shopping districts; explain what/where/how to
   choose + packing or customs caveats.
 - **Local Tips**: transport, cultural etiquette, weather/what-to-wear, payment, safety.
@@ -178,6 +201,10 @@ omit it or clearly mark it as approximate rather than fabricating.
   标注一个提示——拥堵系数，例如：`车程约 1.5 小时（节假日拥堵，实际建议按 ×1.5 倍预留）`。
 - 同时在贴士/行程显著位置提醒：**提前预订机票、酒店、火车票**（节假日一票难求、房价上浮）。
 - 非自驾的境内节假日行程同样建议给出提前预订提醒（机票/酒店/火车），但不强求 ×1.5 标注。
+- **酒店溢价上下文（写进模块 4）**：落在窗口内时，每张酒店卡同时标出**平日参考价**与
+  **节假日参考价**（如 `平日 ¥420 / 节假日 ¥880`），把涨幅摆出来让用户自己判断——
+  **不替用户设"溢价过高"的阈值**。涨幅明显时可加一句「节假日上浮明显，可同时考虑同片区备选」。
+  价格须来自实际查询，并标注「参考价，以平台实时价格为准」。
 
 **境外行程（international，含港澳台）**
 - **签证**：检索该目的地国家/地区对中国护照是否**需要办理签证**，以及**签证形式**
@@ -204,8 +231,8 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   --filename {slug}.jpg`. Read the returned `alt`, pick a topic-matching candidate, and keep the
   downloaded file path to reference in the card. See `rendering-spec.md §5.1`.
   **配图不是硬性底线**：某地点取不到贴切图时可整洁无图，不要硬塞不相关的图。
-- **7 sections only** (order: Itinerary, Attractions, Experiences, Dining, Shopping, Local Tips,
-  Unscheduled), each with a clear numbered section and anchor navigation at top.
+- **7 sections only** (order: Itinerary, Attractions, Experiences, Dining & Lodging, Shopping,
+  Local Tips, Unscheduled), each with a clear numbered section and anchor navigation at top.
 - Fixed **blue/teal editorial theme** — do not ask the user to pick a color. Follow the
   **统一语义标注系统**（rendering-spec §2.1）：同一类信息（时间/价格/地点/链接/警示）全页同一颜色、
   同一写法、同一形式；强调只有三档且文字底色高亮全页 ≤3 处；同一模块内不得表格与卡片混用。
@@ -215,7 +242,9 @@ Assemble **one HTML file + its sibling local-image folder** that works on phone 
   `references/app-deeplink-nav.md` and rendering-spec §5.2), and a **local image**
   (`<img class="card-img" ...>` with
   `src="{dest}-guide_files/{file}"`). Restaurant cards must label the **rating source**
-  (大众点评 / Google).
+  (大众点评 / Google); **hotel cards must label theirs too**（境内 携程：x.x / 境外 Google：x.x）
+  together with the 平日/节假日参考价 when the trip falls in a holiday window. In the **行程**
+  module, meals and lodging show the **area only** — names live in module 4 (see Naming rule).
 - Inline the CSS (and only the JS truly needed); keep the HTML portable so it can be opened from
   disk or served statically **together with its `_files/` image folder**.
 - **第 7 模块「未安排的景点清单」**：列出每天行程 **30 km 半径内**、有真实价值但未被排入的景点。

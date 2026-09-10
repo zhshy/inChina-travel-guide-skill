@@ -1,6 +1,6 @@
 # Research Data Shapes
 
-This document defines the data structures that the research phase should produce for each of the six core modules. These shapes are guidance for collecting destination records; they are not a mandate to emit intermediate JSON files or run any script. Gather the fields listed below and render them directly into the final single-page HTML guide.
+This document defines the data structures that the research phase should produce for each of the seven core modules. These shapes are guidance for collecting destination records; they are not a mandate to emit intermediate JSON files or run any script. Gather the fields listed below and render them directly into the final single-page HTML guide.
 
 ## Global Context
 
@@ -22,12 +22,14 @@ Every research session starts from a global context object:
 - `region = "domestic"` — Destination is within mainland China (Beijing, Shanghai, Chengdu, Xi'an, etc.).
   - Maps: Baidu Maps
   - Official Info: WeChat Official Accounts
-  - Restaurant Ratings: Dianping (大众点评)
+  - Restaurant Ratings: Dianping (大众点评) — high-rated venues
+  - Lodging Ratings: Ctrip (携程) — high-rated hotels
   - Photos: Pexels script (`scripts/fetch_pexels_image.py`) → local download
 - `region = "international"` — Destination is outside mainland China (Tokyo, Paris, New York, etc.).
   - Maps: Google Maps
   - Official Info: Official websites
-  - Restaurant Ratings: Google Maps ratings
+  - Restaurant Ratings: Google Maps ratings — high-rated venues
+  - Lodging Ratings: Google Maps ratings — high-rated hotels
   - Photos: Pexels script (`scripts/fetch_pexels_image.py`) → local download
 
 **港澳台**: 中国香港 / 中国澳门 / 中国台湾虽属中国领土，但涉及出入境证件与货币，
@@ -65,16 +67,21 @@ to its map web link — never estimate or fabricate coordinates.
           }
         ],
         "meals": {
-          "breakfast": "string — recommendation or 'included'",
-          "lunch": "string — recommendation",
-          "dinner": "string — recommendation"
-        }
+          "breakfast": "string — 只写范围：去哪个片区/哪条街吃，或 'included'",
+          "lunch": "string — 只写范围：当日动线顺路的一片区域，如 'XX 片区'、'XX 地铁站附近'",
+          "dinner": "string — 只写范围，同上"
+        },
+        "lodging_hint": "string — 只写范围：建议住哪一片/哪个地铁站一带，如 '住 XX 站一带，每天换乘一次可达'"
       }
     ],
     "pace_notes": "string — e.g., 'Moderate pace with afternoon breaks'"
   }
 }
 ```
+
+**模块 1 与模块 4 的分工（不要互相串）**：行程里的 `meals` 与 `lodging_hint` 只写**范围**，
+为的是让当天动线顺；**具体餐厅名与酒店名一律写在模块 4**。不要把模块 4 的具名门店搬进行程，
+也不要在模块 4 用"XX 片区"代替店名——模块 4 的标准就是点名（见 Module 4 的 Naming rule）。
 
 ## Module 2: Attractions (景点)
 
@@ -137,11 +144,18 @@ to its map web link — never estimate or fabricate coordinates.
 }
 ```
 
-## Module 4: Dining (餐饮)
+## Module 4: Dining & Lodging (餐饮住宿)
 
-IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine dining, cafes, bars, or chains.
+IMPORTANT: This module is strictly limited to THREE sub-categories only — local snacks, signature
+restaurants, and lodging. No fine dining, cafes, bars, or chains.
 
-### 5a. Local Snacks / Street Food (当地小吃推荐)
+**Naming rule**: every venue in this module carries a real, specific, searchable name — 餐厅名与
+酒店名。A district-level answer（"推荐 XX 片区"）fails here; areas belong to module 1. Cards must
+carry the name, the address and the map link so the traveler can search it and navigate to it.
+The only exception: when a named venue genuinely cannot be verified, ship a directional
+recommendation, mark the card 「未能核实到具体门店」, and never invent a name.
+
+### 4a. Local Snacks / Street Food (当地小吃推荐)
 
 ```json
 {
@@ -169,7 +183,7 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
 }
 ```
 
-### 5b. Signature Restaurants Worth a Detour (值得专程去)
+### 4b. Signature Restaurants Worth a Detour (值得专程去)
 
 ```json
 {
@@ -197,6 +211,48 @@ IMPORTANT: This module is strictly limited to TWO sub-categories only. No fine d
   ]
 }
 ```
+
+### 4c. Lodging (住宿推荐)
+
+原则：**先顺路，再评分**——住宿区域要落在当天动线上（或一城一个基地，每天换乘一次可达），
+再在这个范围里挑平台高分酒店。境内取**携程**高分酒店；境外取 **Google Maps** 高分酒店。
+
+```json
+{
+  "module": "lodging",
+  "subsection": "lodging",
+  "data": [
+    {
+      "hotel_name": "string — 酒店名（真实、可在平台搜到；必填）",
+      "hotel_name_local": "string — 当地语言名（境外时）",
+      "type": "string — 档次/业态，如 '精品设计酒店' / '连锁中档' / '民宿'",
+      "area": "string — 所在片区/最近地铁站，用来说明为何顺路",
+      "location": {
+        "address": "string",
+        "map_link": "string — 百度（境内）/ Google（境外）",
+        "coordinates": "optional {lat, lng, sys} — 见上方 Coordinates field"
+      },
+      "rating": {
+        "source": "ctrip" | "google",
+        "score": "number — 携程评分（境内）/ Google 评分（境外）",
+        "review_count": "string — 点评数，如 '3200 条'",
+        "display": "string — 如 '携程：4.7/5（3200 条）'"
+      },
+      "price": {
+        "weekday_ref": "string — 平日参考价，如 '¥420/晚'",
+        "holiday_ref": "string — 节假日参考价，如 '¥880/晚'；行程不在节假日窗口时省略",
+        "note": "string — '参考价，以平台实时价格为准'"
+      },
+      "why_stay_here": "string — 具体理由：位置/交通/安静度/亲子友好/含早等",
+      "holiday_note": "string — optional：节假日上浮明显时提示可考虑同片区备选"
+    }
+  ]
+}
+```
+
+**价格纪律**：不得编造房价。查不到就只留评分与片区，并说明"价格以平台实时价格为准"。
+行程落在节假日窗口（元旦/过年/清明/端午/五一/中秋/十一/圣诞）时，平日与节假日参考价**两个都写**，
+把涨幅摆给用户自己判断——不替用户设"溢价过高"的阈值。
 
 ## Module 5: Shopping (购物)
 
