@@ -92,60 +92,6 @@ AI 将自动判断区域并启动研究流程。
 
 ---
 
-## 🖼️ 配图（每次生成都带图）
-
-为了让**每次生成**都自动配本地图，本分支内建了 Pexels 取图通道：
-
-- 脚本：`scripts/fetch_pexels_image.py`（纯 Python、无第三方依赖）
-- 作用：按地点英文关键词搜索 Pexels → 打印候选（id + alt）→ 下载选中图到本地
-  `{城市}-guide_files/`，HTML 用相对路径引用，图 100% 本地可显示、不裂图。
-- 授权：Pexels License（≈CC0，可商用、可修改、无需署名）。
-- 用法：
-  ```bash
-  # 配置 key（任选其一）
-  export PEXELS_API_KEY=你的key
-  # 或把 key 写进 scripts/.pexels_key（已 gitignore）
-
-  # 单个地点下载
-  python scripts/fetch_pexels_image.py "成都大熊猫基地" "giant panda china" \
-      --out chengdu-guide_files --filename panda-base.jpg
-
-  # 批量（plan.csv：地点,英文关键词,文件名）
-  python scripts/fetch_pexels_image.py --batch plan.csv --out chengdu-guide_files
-
-  # 先看候选不下载，再 --pick N 选第 N 张
-  python scripts/fetch_pexels_image.py "浅草寺" "sensoji asakusa" --preview-only
-  ```
-
-> ⚠️ 生成环境（沙盒）访问不了 Wikimedia / 百度 / 小红书等多数图床，也无法逐张目检远程 URL。
-> Pexels 是实测唯一可稳定调用、可下载、可商用的免费通道——故作为默认。若某次运行无 key 或
-> API 不可达，agent 会向用户说明并提供替代方案，而不是硬放会裂的图。
-
----
-
-## 🧪 实战示例：发布攻略到独立域名
-
-本 Skill 的交付物是 **一个 HTML + 同级 `{城市}-guide_files/` 本地图片目录**。若想把某份生成好的攻略
-分享给他人，推荐给它配一个 **独立的 GitHub Pages 域名**，让攻略有专属的、可永久访问的链接。
-
-以「北京·国庆 3 日游」为例，完整流程如下：
-
-| 步骤 | 说明 |
-|------|------|
-| 1️⃣ 用本 Skill 生成攻略 | 产出目录 `beijing-nationalday-guide/`，内含 `beijing-nationalday-3days.html` + `beijing-nationalday-guide_files/`（8 张本地图，HTML 用相对路径引用） |
-| 2️⃣ 为攻略建独立仓库 | 新建 GitHub 仓库，命名与攻略同名，如 `zhshy/beijing-nationalday-guide`，获得独立 Pages 子路径 `/beijing-nationalday-guide/` |
-| 3️⃣ 放入并配置 Pages | `main` 分支直接放 HTML + 图目录 + `index.html`（跳转到攻略页）+ `.nojekyll`，仓库 Settings→Pages 开启，Source 选 `main` / root |
-| 4️⃣ 上线 | 得到专属链接 `https://zhshy.github.io/beijing-nationalday-guide/`（根入口）与 `.../beijing-nationalday-3days.html`（攻略本体） |
-
-> ✅ **要点**：攻略自身的 `beijing-nationalday-guide_files/` 图片用**相对路径**引用、与 HTML 一起分发，
-> 因此整套文件直接放进任何静态托管（GitHub Pages / Vercel / 网盘）都能正常显示、不裂图。
->
-> ✅ **独立域名的意义**：不要把攻略塞进本 Skill 仓库的 `gh-pages` 分支——那会让链接长成
-> `…/inChina-travel-guide-skill/beijing-nationalday-3days.html`，且把生成物与 Skill 源码混在一起。
-> 新建同名独立仓库后，攻略拥有干净短链 `https://zhshy.github.io/beijing-nationalday-guide/`，
-> Skill 仓库也保持纯净（只含源码，无需 `gh-pages` 分支）。
-
----
 
 ## 📚 已发布的成品实例
 
@@ -196,6 +142,33 @@ inChina-travel-guide-skill/
 
 ---
 
+## 🛠️ 技术依赖
+
+- 本 Skill 为 AI Agent 指令集，兼容任何支持 Skill/技能包调用的 AI 平台（如 WorkBuddy、Claude、GPT 等）。
+- 使用方式是让 AI 加载 `SKILL.md`，再按需读取 `references/` 下的规范；无需任何运行时、依赖或构建
+  （配图脚本为可选辅助，纯 Python 标准库）。
+- 前端问卷（`assets/intake-questionnaire/index.html`）为纯静态 HTML + CSS + JavaScript，可本地双击打开或部署到任意静态托管。
+- 评分、开放时间与地图链接由 AI 在生成期间通过联网检索获取，并按境内/境外自动切换事实来源；
+  配图通过 Pexels 脚本下载到本地 `{城市}-guide_files/`。
+- 产出为**一个 HTML + 同级本地图片目录**，可离线用浏览器打开（两者需一起分发）。
+
+---
+
+## 📝 注意事项
+
+- 所有地点卡片**必须**包含精确的位置链接（百度地图或 Google Maps）
+- 每个**景点卡尽量配一张本地图**（经 Pexels 脚本下载，见上“配图”小节）
+- 配图**非硬性底线**：取不到贴切图时可整洁无图，不硬塞不相关图、不放会裂的远程图
+- 餐厅评分**必须**标注来源（大众点评或 Google）；境内酒店标**携程**评分，境外酒店标 **Google** 评分
+- 境内景点优先搜索**微信公众号**作为官方信息来源
+- 境外景点优先搜索**官方网站**作为官方信息来源
+- 餐饮住宿模块**严格限制**为三类，不得生成其他餐饮/住宿推荐；也不做预订入口
+- 模块 4 的餐厅与酒店**必须给出具体名称**（可在平台搜到）；核不到具名门店时才可降级为方向性推荐并在卡片标明
+- 行程模块的餐食与住宿**只写范围**（顺路片区 / 地铁站一带），不把具体店名搬进去
+- 第 7 模块（未安排的景点清单）：仅收录每天行程 30 km 内的未排入景点；勾选后生成的文字须
+  自包含、可直接粘回任意 AI 重新生成
+---
+
 ## 🔧 修改记录（相对于原版）
 
 | 修改项 | 说明 |
@@ -226,35 +199,6 @@ inChina-travel-guide-skill/
 | ✅ **住宿取值口径** | 境内从携程选高分酒店（默认 ≥4.5，优先 4.7+ 且有足量点评数），境外查 Google Maps（默认 ≥4.3）；优先一城一个住宿基地，半天不浪费在搬酒店上 |
 | ✅ **节假日价格语境** | 境内节假日窗口内，酒店卡同时标出**平日参考价**与**节假日参考价**，把涨幅摆给用户自己判断；不设"溢价过高"的硬阈值，标注"以平台实时价格为准" |
 | ✅ **新增「已发布的成品实例」** | README 与 SKILL.md 各增一节，收录埃及 13 天、乌兰布统·多伦 6 日、北京 3 日游三个上线实例的**可访问链接**，供生成前对照版式与结构（同时注明「参考非模板」，禁止照抄目的地内容） |
-
----
-
-## 🛠️ 技术依赖
-
-- 本 Skill 为 AI Agent 指令集，兼容任何支持 Skill/技能包调用的 AI 平台（如 WorkBuddy、Claude、GPT 等）。
-- 使用方式是让 AI 加载 `SKILL.md`，再按需读取 `references/` 下的规范；无需任何运行时、依赖或构建
-  （配图脚本为可选辅助，纯 Python 标准库）。
-- 前端问卷（`assets/intake-questionnaire/index.html`）为纯静态 HTML + CSS + JavaScript，可本地双击打开或部署到任意静态托管。
-- 评分、开放时间与地图链接由 AI 在生成期间通过联网检索获取，并按境内/境外自动切换事实来源；
-  配图通过 Pexels 脚本下载到本地 `{城市}-guide_files/`。
-- 产出为**一个 HTML + 同级本地图片目录**，可离线用浏览器打开（两者需一起分发）。
-
----
-
-## 📝 注意事项
-
-- 所有地点卡片**必须**包含精确的位置链接（百度地图或 Google Maps）
-- 每个**景点卡尽量配一张本地图**（经 Pexels 脚本下载，见上“配图”小节）
-- 配图**非硬性底线**：取不到贴切图时可整洁无图，不硬塞不相关图、不放会裂的远程图
-- 餐厅评分**必须**标注来源（大众点评或 Google）；境内酒店标**携程**评分，境外酒店标 **Google** 评分
-- 境内景点优先搜索**微信公众号**作为官方信息来源
-- 境外景点优先搜索**官方网站**作为官方信息来源
-- 餐饮住宿模块**严格限制**为三类，不得生成其他餐饮/住宿推荐；也不做预订入口
-- 模块 4 的餐厅与酒店**必须给出具体名称**（可在平台搜到）；核不到具名门店时才可降级为方向性推荐并在卡片标明
-- 行程模块的餐食与住宿**只写范围**（顺路片区 / 地铁站一带），不把具体店名搬进去
-- 第 7 模块（未安排的景点清单）：仅收录每天行程 30 km 内的未排入景点；勾选后生成的文字须
-  自包含、可直接粘回任意 AI 重新生成
-
 ---
 
 ## 📄 许可证
