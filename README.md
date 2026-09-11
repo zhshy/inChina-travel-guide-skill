@@ -38,7 +38,7 @@
   `~/.inchina-travel-guide/MEMORY.md`（见 `references/trip-memory.md`）
 - 再次使用时自动预填偏好并告知用户，免去重复问卷
 - 严格不存敏感信息：截图、证件号、订单号、完整聊天记录一律不入库
-- 
+
 ### 🗂️ 已发布的成品实例
 - 收录两份用本 Skill 生成、已上线的真实攻略，可**直接点开看成品**：
   [乌兰布统·多伦 6 日自驾](https://zhshy.github.io/Ulanbutong/) ·
@@ -53,8 +53,8 @@
 1. 打开 `assets/intake-questionnaire/index.html`（也可部署到 Web 服务）
 2. 填写目的地、天数、人数、旅行风格、特别偏好
 3. 确认区域（自动判断/中国境内/境外）
-4. 点击「生成旅行手册」，将数据发送给 AI 助手
-5. 获得一份完整的 HTML 旅行手册
+4. 点击「生成旅行手册」——弹出结果窗，页面**直接生成一段需求提示词**，点「复制提示词」一键拿走
+5. 把提示词发给 AI 助手，获得一份完整的 HTML 旅行手册
 
 ### 方式二：直接对话
 直接向 AI 助手发送自然语言请求，例如：
@@ -87,8 +87,9 @@ inChina-travel-guide-skill/
 │   │   └── index.html       # 用户问卷（含区域确认，无配色选择）
 │   └── canonical/product/   # 视觉风格参考（仅供参考，不作渲染驱动）
 ├── scripts/
-│   └── fetch_pexels_image.py # 取本地配图的 Pexels 脚本（读取 .pexels_key）
-│   └── .pexels_key          # 本地私密 key（gitignore，不入库）
+│   ├── fetch_pexels_image.py        # 取本地配图的 Pexels 脚本（读取 .pexels_key）
+│   ├── test-intake-questionnaire.js # 问卷回归测试（33 条断言，无第三方依赖）
+│   └── .pexels_key                  # 本地私密 key（⚠️ 见「注意事项」的密钥说明）
 └── references/
     ├── first-use-intake.md          # 问卷/默认输入引导 + 四拍交互格式（Re-ground→Simplify→Recommend→Options）
     ├── trip-memory.md               # 跨行程记忆协议（预填规则、可存/禁存清单、更新规则）
@@ -107,7 +108,9 @@ inChina-travel-guide-skill/
 - 本 Skill 为 AI Agent 指令集，兼容任何支持 Skill/技能包调用的 AI 平台（如 WorkBuddy、Claude、GPT 等）。
 - 使用方式是让 AI 加载 `SKILL.md`，再按需读取 `references/` 下的规范；无需任何运行时、依赖或构建
   （配图脚本为可选辅助，纯 Python 标准库）。
-- 前端问卷（`assets/intake-questionnaire/index.html`）为纯静态 HTML + CSS + JavaScript，可本地双击打开或部署到任意静态托管。
+- 前端问卷（`assets/intake-questionnaire/index.html`）为纯静态 HTML + CSS + JavaScript，可本地双击打开或部署到任意静态托管。提交后页面**直接生成一段可复制的需求提示词**（弹窗内展示 + 一键复制），无需用户手抄。
+- 问卷自带回归测试（纯 Node，无第三方依赖）：
+  `node scripts/test-intake-questionnaire.js assets/intake-questionnaire/index.html` — 33 条断言覆盖弹窗开关、提示词内容、剪贴板三条路径与校验错误态。
 - 评分、开放时间与地图链接由 AI 在生成期间通过联网检索获取，并按境内/境外自动切换事实来源；
   配图通过 Pexels 脚本下载到本地 `{城市}-guide_files/`。
 - 产出为**一个 HTML + 同级本地图片目录**，可离线用浏览器打开（两者需一起分发）。
@@ -127,6 +130,9 @@ inChina-travel-guide-skill/
 - 行程模块的餐食与住宿**只写范围**（顺路片区 / 地铁站一带），不把具体店名搬进去
 - 第 7 模块（未安排的景点清单）：仅收录每天行程 30 km 内的未排入景点；勾选后生成的文字须
   自包含、可直接粘回任意 AI 重新生成
+- 问卷提交后**必须产出可复制的提示词**（`window.alert` 只弹文本、拿不走内容，属于缺陷），
+  且提示词要自包含：含 7 模块契约、行程只写片区、境内/境外评分来源三项硬约束
+
 ---
 
 ## 🔧 修改记录（相对于原版）
@@ -140,6 +146,7 @@ inChina-travel-guide-skill/
 | ✅ 餐饮缩减为 2 类 | 仅保留「当地小吃」和「值得专程去」（后续已升级为 3 类，见下方「模块 4 升级为『餐饮住宿』」） |
 | ✅ 删除配色选择 | 固定使用蓝/青绿主题 |
 | ✅ 问卷界面优化 | 新增区域确认下拉菜单 |
+| ✅ **问卷提交即产出可复制提示词** | 点「生成旅行手册」不再只弹一段提示文本，而是弹出结果窗，直接生成一段自包含的需求提示词（含 7 模块契约、行程只写片区、境内/境外评分来源），一键复制即可发给助手；含行内校验、Esc/遮罩关闭、剪贴板降级（附 33 条断言的回归测试） |
 | ✅ 清理原版渲染流水线 | 移除 34 个 Python 脚本 / agents 配置 / 冲突的 8 模块 references |
 | ✅ 新增渲染规范 | `references/rendering-spec.md` 固化单页 HTML 结构与视觉契约 |
 | ✅ canonical 定位为视觉参考 | 仅作观感参考，不驱动任何脚本，不复制其 Bali 内容与 8 章结构 |
@@ -159,6 +166,7 @@ inChina-travel-guide-skill/
 | ✅ **住宿取值口径** | 境内从携程选高分酒店（默认 ≥4.5，优先 4.7+ 且有足量点评数），境外查 Google Maps（默认 ≥4.3）；优先一城一个住宿基地，半天不浪费在搬酒店上 |
 | ✅ **节假日价格语境** | 境内节假日窗口内，酒店卡同时标出**平日参考价**与**节假日参考价**，把涨幅摆给用户自己判断；不设"溢价过高"的硬阈值，标注"以平台实时价格为准" |
 | ✅ **新增「已发布的成品实例」** | README 与 SKILL.md 各增一节，收录埃及 13 天、乌兰布统·多伦 6 日、北京 3 日游三个上线实例的**可访问链接**，供生成前对照版式与结构（同时注明「参考非模板」，禁止照抄目的地内容） |
+
 ---
 
 ## 📄 许可证

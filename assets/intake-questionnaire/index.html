@@ -210,6 +210,186 @@
       padding-top: 18px;
     }
 
+    /* ===== Field error ===== */
+    input.invalid,
+    select.invalid,
+    textarea.invalid {
+      border-color: #d9534f;
+      background: #fff7f7;
+    }
+
+    .field-error {
+      display: none;
+      color: #c0392b;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
+    /* ===== Result modal ===== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: rgba(26, 58, 74, 0.45);
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-card {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 640px;
+      max-height: calc(100vh - 48px);
+      overflow: hidden;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 24px 64px rgba(26, 58, 74, 0.28);
+      animation: modal-pop 0.18s ease-out;
+    }
+
+    @keyframes modal-pop {
+      from { transform: translateY(10px) scale(0.98); opacity: 0; }
+      to   { transform: none; opacity: 1; }
+    }
+
+    .modal-head {
+      padding: 20px 24px 14px;
+      border-bottom: 1px solid #eaf1ee;
+    }
+
+    .modal-head h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 19px;
+      font-weight: 700;
+      color: #1a3a4a;
+    }
+
+    .modal-head p {
+      margin-top: 4px;
+      color: #6f8a8a;
+      font-size: 13.5px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      font-size: 12.5px;
+      color: #1a3a4a;
+      background: #eaf1ee;
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    .modal-body {
+      padding: 16px 24px;
+      overflow: auto;
+    }
+
+    .modal-body label {
+      font-size: 13px;
+      color: #6f8a8a;
+    }
+
+    #promptBox {
+      width: 100%;
+      min-height: 220px;
+      max-height: 46vh;
+      resize: vertical;
+      padding: 12px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #1a2e3a;
+      background: #fafcfb;
+      border: 1.5px solid #dee9e5;
+      border-radius: 12px;
+    }
+
+    #promptBox:focus {
+      outline: none;
+      border-color: #3ba0a8;
+      box-shadow: 0 0 0 4px rgba(59, 160, 168, 0.10);
+    }
+
+    .modal-foot {
+      display: flex;
+      gap: 10px;
+      padding: 14px 24px 20px;
+      border-top: 1px solid #eaf1ee;
+    }
+
+    .btn {
+      padding: 13px 18px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: #1a3a4a;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #2a5a6a;
+    }
+
+    .btn-primary.copied {
+      background: #2a7a7a;
+    }
+
+    .btn-ghost {
+      background: #f2f7f5;
+      color: #1a3a4a;
+      border: 1px solid #dee9e5;
+    }
+
+    .btn-ghost:hover {
+      background: #e6f0ec;
+    }
+
+    @media (max-width: 480px) {
+      .modal {
+        padding: 0;
+      }
+      .modal-card {
+        max-height: 100vh;
+        border-radius: 0;
+      }
+      .modal-foot {
+        flex-direction: column-reverse;
+      }
+    }
+
     /* ===== Utility ===== */
     .hidden {
       display: none !important;
@@ -238,8 +418,10 @@
           type="text"
           id="destination"
           placeholder="例如：成都、西安、东京、巴黎"
+          aria-describedby="err-destination"
           required
         />
+        <div class="field-error" id="err-destination">请填写目的地</div>
       </div>
 
       <!-- 天数 + 人数 -->
@@ -290,8 +472,29 @@
       <!-- 提交 -->
       <button type="submit" class="btn-submit">✨ 生成旅行手册</button>
 
-      <div class="footnote">生成后你将获得一份可直接保存的 HTML 旅行手册</div>
+      <div class="footnote">提交后会生成一段需求提示词，复制发给助手即可开始生成</div>
     </form>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 结果弹窗：展示可直接复制给助手的需求提示词 -->
+  <!-- ============================================================ -->
+  <div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="modalTitle">✅ 需求提示词已生成</h2>
+        <p>复制下面这段，发给助手即可开始生成你的旅行手册。</p>
+        <div class="chips" id="summaryChips"></div>
+      </div>
+      <div class="modal-body">
+        <label for="promptBox">需求提示词（可编辑）</label>
+        <textarea id="promptBox" spellcheck="false"></textarea>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-primary" id="copyBtn">📋 复制提示词</button>
+        <button type="button" class="btn btn-ghost" id="closeBtn">✏️ 返回修改</button>
+      </div>
+    </div>
   </div>
 
   <!-- ============================================================ -->
@@ -376,42 +579,173 @@
         };
       }
 
+      // ---------- 区域文案 ----------
+      function regionText(value) {
+        if (value === 'domestic') return '中国境内（百度地图 + 大众点评）';
+        if (value === 'international') return '境外（Google Maps）';
+        return '自动判断（境内用百度地图 + 大众点评，境外用 Google Maps）';
+      }
+
+      // ---------- 生成需求提示词 ----------
+      // 这是本页唯一交付物：一段自包含、可直接粘给助手的自然语言需求。
+      function buildPrompt(data) {
+        const styles = data.styles.length ? data.styles.join('、') : '未指定（按主流默认安排）';
+        return [
+          '请用 inChina-travel-guide-skill 为我生成一份完整的旅行手册。',
+          '',
+          '【旅行需求】',
+          '- 目的地：' + data.destination,
+          '- 天数：' + data.days + ' 天',
+          '- 人数：' + data.travelers + ' 人',
+          '- 旅行风格：' + styles,
+          '- 区域判定：' + regionText(data.regionConfirm),
+          '- 特别偏好：' + (data.preferences || '无特别偏好'),
+          '',
+          '【输出要求】',
+          '1. 严格按 7 个模块输出单页 HTML 手册：行程 / 景点 / 体验 / 餐饮住宿 / 购物 / 当地贴士 / 未安排的景点清单。',
+          '2. 行程模块只写片区范围（顺路片区或地铁站一带），具体餐厅与酒店的名称放在「餐饮住宿」模块。',
+          '3. 境内酒店取携程高分、餐厅取大众点评高分；境外酒店与餐厅取 Google 高分。',
+          '4. 交付一页可直接保存的 HTML 手册，配同级本地图片目录，手机与电脑都能正常查看。',
+          '',
+          '【以下信息我还没给，请按保守、主流的首次到访方案安排，不必回头追问】',
+          '- 具体出行日期与时间',
+          '- 预算档位',
+          '- 交通与住宿（若我已订好会另外发截图或文字）',
+          '- 必去清单 / 排除项',
+          '- 饮食禁忌或无障碍等特殊需求',
+        ].join('\n');
+      }
+
+      // ---------- 弹窗 ----------
+      const MODAL = document.getElementById('resultModal');
+      const PROMPT_BOX = document.getElementById('promptBox');
+      const COPY_BTN = document.getElementById('copyBtn');
+      const CLOSE_BTN = document.getElementById('closeBtn');
+      const CHIPS = document.getElementById('summaryChips');
+      let lastFocused = null;
+
+      function openModal(data) {
+        PROMPT_BOX.value = buildPrompt(data);
+
+        const chips = [
+          '📍 ' + data.destination,
+          '📅 ' + data.days + ' 天',
+          '👥 ' + data.travelers + ' 人',
+        ];
+        if (data.styles.length) chips.push('🎨 ' + data.styles.join('、'));
+        chips.push(data.regionConfirm === 'international' ? '🗺️ 境外' :
+                   data.regionConfirm === 'domestic' ? '🗺️ 境内' : '🗺️ 自动判定');
+
+        CHIPS.innerHTML = '';
+        chips.forEach(function(t) {
+          const span = document.createElement('span');
+          span.className = 'chip';
+          span.textContent = t;
+          CHIPS.appendChild(span);
+        });
+
+        lastFocused = document.activeElement;
+        MODAL.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        COPY_BTN.focus();
+        COPY_BTN.select && COPY_BTN.select();
+      }
+
+      function closeModal() {
+        MODAL.classList.remove('open');
+        document.body.style.overflow = '';
+        resetCopyBtn();
+        if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      }
+
+      let copyTimer = null;
+      function resetCopyBtn() {
+        if (copyTimer) clearTimeout(copyTimer);
+        copyTimer = null;
+        COPY_BTN.classList.remove('copied');
+        COPY_BTN.textContent = '📋 复制提示词';
+      }
+
+      function flashCopyBtn(text, copied) {
+        if (copyTimer) clearTimeout(copyTimer);
+        COPY_BTN.classList.toggle('copied', !!copied);
+        COPY_BTN.textContent = text;
+        copyTimer = setTimeout(resetCopyBtn, copied ? 2000 : 2800);
+      }
+
+      function selectPrompt() {
+        PROMPT_BOX.focus();
+        PROMPT_BOX.select();
+        PROMPT_BOX.setSelectionRange(0, PROMPT_BOX.value.length);
+      }
+
+      function copyPrompt() {
+        const text = PROMPT_BOX.value;
+        const afterCopy = function(ok) {
+          if (ok) {
+            flashCopyBtn('✅ 已复制', true);
+          } else {
+            selectPrompt();
+            flashCopyBtn('请按 Ctrl/Cmd + C', false);
+          }
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(
+            function() { afterCopy(true); },
+            function() { afterCopy(legacyCopy()); }
+          );
+        } else {
+          afterCopy(legacyCopy());
+        }
+      }
+
+      // file:// 或无剪贴板权限时的兜底
+      function legacyCopy() {
+        try {
+          selectPrompt();
+          return document.execCommand('copy');
+        } catch (_) {
+          return false;
+        }
+      }
+
+      COPY_BTN.addEventListener('click', copyPrompt);
+      CLOSE_BTN.addEventListener('click', closeModal);
+
+      // 点遮罩关闭
+      MODAL.addEventListener('click', function(e) {
+        if (e.target === MODAL) closeModal();
+      });
+
+      // Esc 关闭
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && MODAL.classList.contains('open')) closeModal();
+      });
+
       // ---------- 提交 ----------
       FORM.addEventListener('submit', function(e) {
         e.preventDefault();
 
         const data = collectFormData();
+        const destEl = document.getElementById('destination');
+        const errEl = document.getElementById('err-destination');
 
         if (!data.destination) {
-          alert('📍 请填写目的地');
+          destEl.classList.add('invalid');
+          errEl.classList.add('show');
+          destEl.focus();
           return;
         }
+
+        destEl.classList.remove('invalid');
+        errEl.classList.remove('show');
 
         // 保存
         saveForm();
 
-        // 友好提示
-        const regionLabel =
-          data.regionConfirm === 'domestic' ? '中国境内（百度地图）' :
-          data.regionConfirm === 'international' ? '境外（Google Maps）' :
-          '自动判断';
-
-        const styleText = data.styles.length ? data.styles.join('、') : '未选择';
-
-        const msg = [
-          '✅ 问卷已提交！',
-          '',
-          '📍 目的地：' + data.destination,
-          '📅 天数：' + data.days + ' 天',
-          '👥 人数：' + data.travelers + ' 人',
-          '🎨 风格：' + styleText,
-          '🗺️ 区域：' + regionLabel,
-          data.preferences ? '📝 偏好：' + data.preferences : '',
-          '',
-          '请将以上信息发送给助手，开始生成旅行手册。',
-        ].filter(Boolean).join('\n');
-
-        alert(msg);
+        // 生成提示词并弹出结果
+        openModal(data);
 
         // 也输出到控制台（方便调试）
         console.log('📋 表单数据：', data);
@@ -423,6 +757,14 @@
           preferences: data.preferences,
           region: data.regionConfirm,
         }).toString());
+      });
+
+      // 修正目的地后清掉错误态
+      document.getElementById('destination').addEventListener('input', function() {
+        if (this.value.trim()) {
+          this.classList.remove('invalid');
+          document.getElementById('err-destination').classList.remove('show');
+        }
       });
 
       // ---------- 绑定自动保存 ----------
